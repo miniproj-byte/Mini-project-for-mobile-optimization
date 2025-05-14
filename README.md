@@ -3,7 +3,7 @@
 This project implements progressive image loading for improving mobile performance and user experience.
 
 ## Team Members
-- Hirthikk (Team Lead)
+- Hirthikk 
 - Nancy
 - Ashwanth
 - Priya v 42130360
