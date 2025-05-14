@@ -1,2 +1,19 @@
-# Mini-project-for-mobile-optimization
-Mini project for mobile optimization using progressive image loading
+# Mobile Optimization Mini Project
+
+This project implements progressive image loading for improving mobile performance and user experience.
+
+## Team Members
+- H (Team Lead)
+- Nancy
+- Ashwanth
+- Priya v
+- Priya Dharshini
+
+## Tech Stack
+HTML • CSS • JavaScript
+
+## Features
+- Lazy loading
+- Blurred placeholders
+- Optimized image formats
+
