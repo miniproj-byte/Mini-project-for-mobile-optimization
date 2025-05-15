@@ -1,12 +1,107 @@
+ /* ============================ General Page Setup ============================ */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #fdfbfb, #ebedee); /* Soft pastel gradient */
+  color: #333;
+  text-align: center;
+}
+
+/* ============================ Logo Styling ============================ */
+img[alt="T6 Performance Means Pixels"] {
+  max-width: 200px;
+  margin: 2rem auto 1rem;
+  display: block;
+}
+
+/* ============================ Search Bar Styling ============================ */
+#search-bar {
+  width: 60%;
+  height: 36px;
+  padding: 0 12px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+#search-bar:focus {
+  border-color: #888;
+  outline: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* ============================ Tag Section Styling ============================ */
+#tags {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+#tags label {
+  font-size: 0.95rem;
+  color: #444;
+  cursor: pointer;
+}
+
+#tags input[type="checkbox"] {
+  margin-right: 6px;
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+/* ============================ Image Gallery Table Layout ============================ */
+table {
+  margin: 2rem auto;
+  border-spacing: 20px;
+}
+
+td {
+  width: 300px;
+  height: 200px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #f0f0f0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+td:hover {
+  transform: scale(1.03);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* ============================ Image Styling (with Blur Effect) ============================ */
+td img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(5px);
+  transition: filter 0.4s ease, transform 0.3s ease;
+}
+
+td:hover img,
+td img.loaded {
+  filter: blur(0);
+  transform: scale(1.05);
+}
+
+/* ============================ Optional Image Container Style ============================ */
 .image-container {
   position: relative;
   overflow: hidden;
   background: #f0f0f0;
   margin-bottom: 1rem;
   break-inside: avoid;
+  border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border-radius: 8px;
 }
 
 .image-container:hover {
@@ -17,10 +112,22 @@
 .image-container img {
   width: 100%;
   display: block;
+  filter: blur(5px);
   transition: filter 0.3s ease;
-  filter: blur(5px); /* initial blur for low-quality preview */
 }
 
-.image-container img.lazyloaded {
-  filter: blur(0); /* remove blur once full image is loaded */
+.image-container img.loaded {
+  filter: blur(0);
+}
+
+/* ============================ Fade-In Animation for Tags ============================ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
