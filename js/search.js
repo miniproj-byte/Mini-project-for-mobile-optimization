@@ -1,31 +1,60 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const searchInput = document.getElementById('search-bar');          // Grab the search bar element
-  const checkboxContainer = document.getElementById('checkbox-container');  // Grab the div holding the checkbox
-  const exactMatchCheckbox = document.getElementById('exact-match');  // Grab the exact match checkbox
-  const imageCards = document.querySelectorAll('.image-card');        // Get all image cards in the gallery
+  // Get all the filter checkboxes
+  const checkboxes = document.querySelectorAll('.tag-filter');
 
-  // When the user clicks/focuses on the search bar, show the checkbox container
-  searchInput.addEventListener('focus', () => {
-    checkboxContainer.style.display = 'block';
-  });
+  // Get the search bar input element
+  const searchInput = document.getElementById('search-bar');
 
-  // Every time the user types in the search bar
-  searchInput.addEventListener('input', () => {
-    const query = searchInput.value.toLowerCase();          // Convert search input to lowercase
-    const exactMatch = exactMatchCheckbox.checked;          // Check if the "Exact Match" box is ticked
+  // Get all image cards
+  const imageCards = document.querySelectorAll('.image-card');
+
+  // Get the checkbox container to toggle visibility
+  const checkboxContainer = document.getElementById('checkbox-container');
+
+  // Function to filter images based on search input and selected tags
+  function filterImages() {
+    // Collect all selected tags from checkboxes
+    const selectedTags = Array.from(checkboxes)
+      .filter(cb => cb.checked)
+      .map(cb => cb.value.toLowerCase());
+
+    // Get the query from the search input
+    const query = searchInput.value.toLowerCase();
 
     imageCards.forEach(card => {
-      const tags = card.getAttribute('data-tags').toLowerCase();   // Get the tags for this image (also lowercase)
+      // Get tags from data-tags attribute
+      const tags = card.getAttribute('data-tags')
+        .toLowerCase()
+        .split(',');
 
-      // Decide if this card matches the search:
-      // - If exactMatch is true, split tags and check if any exactly equals query
-      // - Otherwise, check if query is a substring of tags
-      const match = exactMatch ? tags.split(',').includes(query) : tags.includes(query);
+      // Check if query matches any tag or title
+      const matchesQuery = query === "" || tags.some(tag => tag.includes(query));
 
-      // Show the image if it matches OR if query is empty (no filter)
-      // Hide it if it doesn't match
-      card.style.display = match || query === '' ? 'block' : 'none';
+      // Check if all selected tags are present in this image's tags
+      const matchesTags = selectedTags.every(tag => tags.includes(tag));
+
+      // Show/hide card based on both checks
+      if (matchesQuery && matchesTags) {
+        card.style.display = '';
+      } else {
+        card.style.display = 'none';
+      }
     });
+  }
+
+  // Listen for changes on checkboxes and search input
+  checkboxes.forEach(cb => cb.addEventListener('change', filterImages));
+  searchInput.addEventListener('input', filterImages);
+
+  // Show checkboxes when search bar is focused
+  searchInput.addEventListener('focus', () => {
+    checkboxContainer.style.display = 'flex';
+  });
+
+  // Optional: Hide checkboxes when clicking outside (with a short delay)
+  searchInput.addEventListener('blur', () => {
+    setTimeout(() => {
+      checkboxContainer.style.display = 'none';
+    }, 200); // Delay to allow click on checkboxes
   });
 });
-
