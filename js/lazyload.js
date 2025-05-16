@@ -9,6 +9,9 @@ document.addEventListener("DOMContentLoaded", function () {
           const highResSrc = img.getAttribute('data-src');
           if (highResSrc) {
             img.src = highResSrc;
+            img.onload = () => {
+              img.classList.add("loaded"); // ✅ This line is critical!
+            };
             img.removeAttribute('data-src');
           }
           img.classList.remove('lazy');
@@ -18,14 +21,5 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     lazyImages.forEach(img => observer.observe(img));
-  } else {
-    lazyImages.forEach(img => {
-      const highResSrc = img.getAttribute('data-src');
-      if (highResSrc) {
-        img.src = highResSrc;
-        img.removeAttribute('data-src');
-      }
-      img.classList.remove('lazy');
-    });
   }
 });
