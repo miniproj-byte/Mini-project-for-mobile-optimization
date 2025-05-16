@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
             tempImg.src = highResSrc;
             tempImg.onload = () => {
               img.src = highResSrc;
-              img.classList.add("loaded"); // THIS is what allows CSS blur to go away
+              img.classList.add("loaded");
               img.removeAttribute("data-src");
               observer.unobserve(img);
             };
@@ -33,3 +33,4 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
+

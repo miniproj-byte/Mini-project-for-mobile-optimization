@@ -1,10 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>MyIntern Project 1</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- Logo -->
+  <div align="center">
+    <img src="https://i.postimg.cc/1tXr2cLc/1000193832-removebg-preview.png" alt="T6 Performance Means Pixels">
+  </div>
+
+  <!-- Theme Toggle -->
+  <div id="theme-toggle">
+    <label class="switch">
+      <input type="checkbox" id="theme-switch">
+      <span class="slider round"></span>
+    </label>
+  </div>
+
+  <!-- Search Bar & Tags -->
+  <div align="center">
+    <input id="search-bar" type="search" placeholder="Search here..." />
+    <div id="tags" style="display: none;">
+      <label><input type="checkbox" value="beach"> Beach</label>
+      <label><input type="checkbox" value="travel"> Travel</label>
+      <label><input type="checkbox" value="nature"> Nature</label>
+      <label><input type="checkbox" value="mountains"> Mountains</label>
+    </div>
+  </div>
+
+  <!-- Gallery -->
+  <div class="gallery">
+    <img src="assets/images/low-res/img01-low.webp" data-src="assets/images/high-res/img01-high.webp" alt="Beach Travel" class="lazy">
+    <img src="assets/images/low-res/img02-low.webp" data-src="assets/images/high-res/img02-high.webp" alt="Nature Mountains" class="lazy">
+    <img src="assets/images/low-res/img03-low.webp" data-src="assets/images/high-res/img03-high.webp" alt="Travel Mountains" class="lazy">
+    <img src="assets/images/low-res/img04-low.webp" data-src="assets/images/high-res/img04-high.webp" alt="Beach Nature" class="lazy">
+    <img src="assets/images/low-res/img05-low.webp" data-src="assets/images/high-res/img05-high.webp" alt="Beach" class="lazy">
+    <img src="assets/images/low-res/img06-low.webp" data-src="assets/images/high-res/img06-high.webp" alt="Nature" class="lazy">
+    <img src="assets/images/low-res/img07-low.webp" data-src="assets/images/high-res/img07-high.webp" alt="Mountains" class="lazy">
+    <img src="assets/images/low-res/img08-low.webp" data-src="assets/images/high-res/img08-high.webp" alt="Travel Beach" class="lazy">
+    <img src="assets/images/low-res/img09-low.webp" data-src="assets/images/high-res/img09-high.webp" alt="Travel" class="lazy">
+    <img src="assets/images/low-res/img10-low.webp" data-src="assets/images/high-res/img10-high.webp" alt="Nature Beach" class="lazy">
+    <img src="assets/images/low-res/img11-low.webp" data-src="assets/images/high-res/img11-high.webp" alt="Mountains Beach" class="lazy">
+    <img src="assets/images/low-res/img12-low.webp" data-src="assets/images/high-res/img12-high.webp" alt="Travel Nature" class="lazy">
+    <img src="assets/images/low-res/img13-low.webp" data-src="assets/images/high-res/img13-high.webp" alt="Nature Travel" class="lazy">
+    <img src="assets/images/low-res/img14-low.webp" data-src="assets/images/high-res/img14-high.webp" alt="Mountains Nature" class="lazy">
+    <img src="assets/images/low-res/img15-low.webp" data-src="assets/images/high-res/img15-high.webp" alt="Beach Mountains" class="lazy">
+    <img src="assets/images/low-res/img16-low.webp" data-src="assets/images/high-res/img16-high.webp" alt="Travel Beach" class="lazy">
+  </div>
+
+  <!-- Scripts -->
   <script>
+    // Tag show/hide
     document.addEventListener('DOMContentLoaded', function () {
       const searchBar = document.getElementById('search-bar');
       const tags = document.getElementById('tags');
@@ -17,59 +66,26 @@
         }
       });
     });
+
+    // Dark mode toggle
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggle = document.getElementById("theme-switch");
+      const body = document.body;
+
+      if (localStorage.getItem("theme") === "dark") {
+        body.classList.add("dark-mode");
+        toggle.checked = true;
+      }
+
+      toggle.addEventListener("change", () => {
+        body.classList.toggle("dark-mode");
+        const newTheme = body.classList.contains("dark-mode") ? "dark" : "light";
+        localStorage.setItem("theme", newTheme);
+      });
+    });
   </script>
-</head>
-<body>
 
-  <!-- Logo Section -->
-  <div align="center">
-    <img src="https://i.postimg.cc/1tXr2cLc/1000193832-removebg-preview.png" alt="T6 Performance Means Pixels">
-  </div>
-
-  <!-- Theme Toggle Switch -->
-<div id="theme-toggle">
-  <label class="switch">
-    <input type="checkbox" id="theme-switch">
-    <span class="slider round"></span>
-  </label>
-</div>
-
-
-  <!-- Search and Tags -->
-  <div align="center">
-    <input id="search-bar" type="search" placeholder="Search here..." style="width: 60%; height: 30px;">
-    <div id="tags" style="display: none;">
-      <label><input type="checkbox" value="beach"> Beach</label>
-      <label><input type="checkbox" value="travel"> Travel</label>
-      <label><input type="checkbox" value="nature"> Nature</label>
-      <label><input type="checkbox" value="mountains"> Mountains</label>
-    </div>
-  </div>
-
-  <!-- Image Gallery -->
-<div class="gallery">
-  <img src="assets/images/low-res/img01-low.webp" data-src="assets/images/high-res/img01-high.webp" alt="Beach Travel" class="lazy">
-  <img src="assets/images/low-res/img02-low.webp" data-src="assets/images/high-res/img02-high.webp" alt="Nature Mountains" class="lazy">
-  <img src="assets/images/low-res/img03-low.webp" data-src="assets/images/high-res/img03-high.webp" alt="Travel Mountains" class="lazy">
-  <img src="assets/images/low-res/img04-low.webp" data-src="assets/images/high-res/img04-high.webp" alt="Beach Nature" class="lazy">
-  <img src="assets/images/low-res/img05-low.webp" data-src="assets/images/high-res/img05-high.webp" alt="Beach" class="lazy">
-  <img src="assets/images/low-res/img06-low.webp" data-src="assets/images/high-res/img06-high.webp" alt="Nature" class="lazy">
-  <img src="assets/images/low-res/img07-low.webp" data-src="assets/images/high-res/img07-high.webp" alt="Mountains" class="lazy">
-  <img src="assets/images/low-res/img08-low.webp" data-src="assets/images/high-res/img08-high.webp" alt="Travel Beach" class="lazy">
-  <img src="assets/images/low-res/img09-low.webp" data-src="assets/images/high-res/img09-high.webp" alt="Travel" class="lazy">
-  <img src="assets/images/low-res/img10-low.webp" data-src="assets/images/high-res/img10-high.webp" alt="Nature Beach" class="lazy">
-  <img src="assets/images/low-res/img11-low.webp" data-src="assets/images/high-res/img11-high.webp" alt="Mountains Beach" class="lazy">
-  <img src="assets/images/low-res/img12-low.webp" data-src="assets/images/high-res/img12-high.webp" alt="Travel Nature" class="lazy">
-  <img src="assets/images/low-res/img13-low.webp" data-src="assets/images/high-res/img13-high.webp" alt="Nature Travel" class="lazy">
-  <img src="assets/images/low-res/img14-low.webp" data-src="assets/images/high-res/img14-high.webp" alt="Mountains Nature" class="lazy">
-  <img src="assets/images/low-res/img15-low.webp" data-src="assets/images/high-res/img15-high.webp" alt="Beach Mountains" class="lazy">
-  <img src="assets/images/low-res/img16-low.webp" data-src="assets/images/high-res/img16-high.webp" alt="Travel Beach" class="lazy">
-</div>
-
-
-  <!-- JS for lazy loading and search -->
   <script src="js/lazyload.js"></script>
   <script src="js/search.js"></script>
-
 </body>
 </html>

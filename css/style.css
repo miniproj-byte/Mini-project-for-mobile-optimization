@@ -1,4 +1,3 @@
-/* ============================ General Page Setup ============================ */
 body {
   font-family: 'Segoe UI', sans-serif;
   margin: 0;
@@ -9,7 +8,6 @@ body {
   transition: background-color 0.4s ease, color 0.4s ease;
 }
 
-/* ============================ Search Bar Styling ============================ */
 #search-bar {
   background: #fff;
   color: #222;
@@ -20,21 +18,18 @@ body {
   width: 60%;
   font-size: 1rem;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
 }
 
 #search-bar::placeholder {
   color: #888;
 }
 
-/* ============================ Tag Section Styling ============================ */
 #tags {
   margin-top: 1rem;
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
   gap: 1rem;
-  transition: color 0.4s ease;
 }
 
 #tags label {
@@ -49,15 +44,13 @@ body {
   cursor: pointer;
 }
 
-/* ============================ Gallery Grid ============================ */
 .gallery {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2-column layout */
+  grid-template-columns: repeat(2, 1fr);
   gap: 20px;
   padding: 20px;
   max-width: 900px;
   margin: 2rem auto;
-  transition: color 0.4s ease;
 }
 
 .gallery img {
@@ -71,17 +64,15 @@ body {
   transition: filter 0.5s ease, transform 0.4s ease;
 }
 
-/* Blur removed on image load */
 img.loaded {
   filter: blur(0) brightness(1);
 }
 
-/* Hover zoom */
 .gallery img:hover {
   transform: scale(1.05);
 }
 
-/* ============================ Light/Dark Theme Toggle Styles ============================ */
+/* Toggle */
 #theme-toggle {
   position: fixed;
   top: 20px;
@@ -135,7 +126,7 @@ input:checked + .slider:before {
   box-shadow: 0 2px 6px #388e3c;
 }
 
-/* ============================ Dark Theme Styles ============================ */
+/* Dark mode overrides */
 body.dark-mode {
   background: #121212;
   color: #eee;
