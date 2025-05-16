@@ -83,11 +83,10 @@ img.loaded {
 
 /* ============================ Light/Dark Theme Toggle Styles ============================ */
 #theme-toggle {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 1000;
+  border: 2px solid red;
+  background: yellow;
 }
+
 
 .switch {
   position: relative;
