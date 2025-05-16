@@ -13,12 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const alt = img.alt.toLowerCase();
       const matchesSearch = !searchText || alt.includes(searchText);
       const matchesTags = selectedTags.length === 0 || selectedTags.some(tag => alt.includes(tag));
-
-      if (matchesSearch && matchesTags) {
-        img.style.display = "";
-      } else {
-        img.style.display = "none";
-      }
+      img.style.display = (matchesSearch && matchesTags) ? "" : "none";
     });
   }
 

@@ -12,15 +12,15 @@
     <img src="https://i.postimg.cc/1tXr2cLc/1000193832-removebg-preview.png" alt="T6 Performance Means Pixels">
   </div>
 
-  <!-- Theme Toggle -->
+  <!-- Theme Toggle Switch -->
   <div id="theme-toggle">
     <label class="switch">
-      <input type="checkbox" id="theme-switch">
+      <input type="checkbox" id="theme-switch" />
       <span class="slider round"></span>
     </label>
   </div>
 
-  <!-- Search Bar & Tags -->
+  <!-- Search + Tags -->
   <div align="center">
     <input id="search-bar" type="search" placeholder="Search here..." />
     <div id="tags" style="display: none;">
@@ -33,6 +33,7 @@
 
   <!-- Gallery -->
   <div class="gallery">
+    <!-- Repeat for all images -->
     <img src="assets/images/low-res/img01-low.webp" data-src="assets/images/high-res/img01-high.webp" alt="Beach Travel" class="lazy">
     <img src="assets/images/low-res/img02-low.webp" data-src="assets/images/high-res/img02-high.webp" alt="Nature Mountains" class="lazy">
     <img src="assets/images/low-res/img03-low.webp" data-src="assets/images/high-res/img03-high.webp" alt="Travel Mountains" class="lazy">
@@ -52,40 +53,35 @@
   </div>
 
   <!-- Scripts -->
+  <script src="js/lazyload.js"></script>
+  <script src="js/search.js"></script>
   <script>
-    // Tag show/hide
-    document.addEventListener('DOMContentLoaded', function () {
-      const searchBar = document.getElementById('search-bar');
-      const tags = document.getElementById('tags');
-      searchBar.addEventListener('focus', () => {
-        tags.style.display = 'block';
+    document.addEventListener("DOMContentLoaded", () => {
+      // Show/hide tags on focus
+      const searchBar = document.getElementById("search-bar");
+      const tags = document.getElementById("tags");
+
+      searchBar.addEventListener("focus", () => {
+        tags.style.display = "block";
       });
-      document.addEventListener('click', function (e) {
+      document.addEventListener("click", function (e) {
         if (!searchBar.contains(e.target) && !tags.contains(e.target)) {
-          tags.style.display = 'none';
+          tags.style.display = "none";
         }
       });
-    });
 
-    // Dark mode toggle
-    document.addEventListener('DOMContentLoaded', () => {
+      // Theme toggle
       const toggle = document.getElementById("theme-switch");
       const body = document.body;
-
       if (localStorage.getItem("theme") === "dark") {
         body.classList.add("dark-mode");
         toggle.checked = true;
       }
-
       toggle.addEventListener("change", () => {
         body.classList.toggle("dark-mode");
-        const newTheme = body.classList.contains("dark-mode") ? "dark" : "light";
-        localStorage.setItem("theme", newTheme);
+        localStorage.setItem("theme", body.classList.contains("dark-mode") ? "dark" : "light");
       });
     });
   </script>
-
-  <script src="js/lazyload.js"></script>
-  <script src="js/search.js"></script>
 </body>
 </html>
