@@ -15,8 +15,6 @@ document.addEventListener("DOMContentLoaded", function () {
               img.classList.add("loaded");
               img.removeAttribute("data-src");
               observer.unobserve(img);
-
-              // Trigger Masonry reflow
               if (window.msnry) {
                 window.msnry.layout();
               }

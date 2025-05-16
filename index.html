@@ -9,10 +9,10 @@
 
   <!-- Logo -->
   <div align="center">
-    <img src="https://i.postimg.cc/1tXr2cLc/1000193832-removebg-preview.png" alt="T6 Performance Means Pixels">
+    <img src="https://i.postimg.cc/1tXr2cLc/1000193832-removebg-preview.png" alt="T6 Performance Means Pixels" />
   </div>
 
-  <!-- Theme Toggle Switch -->
+  <!-- Theme Toggle -->
   <div id="theme-toggle">
     <label class="switch">
       <input type="checkbox" id="theme-switch" />
@@ -24,14 +24,14 @@
   <div align="center">
     <input id="search-bar" type="search" placeholder="Search here..." />
     <div id="tags" style="display: none;">
-      <label><input type="checkbox" value="beach"> Beach</label>
-      <label><input type="checkbox" value="travel"> Travel</label>
-      <label><input type="checkbox" value="nature"> Nature</label>
-      <label><input type="checkbox" value="mountains"> Mountains</label>
+      <label><input type="checkbox" value="beach" /> Beach</label>
+      <label><input type="checkbox" value="travel" /> Travel</label>
+      <label><input type="checkbox" value="nature" /> Nature</label>
+      <label><input type="checkbox" value="mountains" /> Mountains</label>
     </div>
   </div>
 
-  <!-- Gallery (Masonry-ready) -->
+  <!-- Masonry Gallery -->
   <div class="gallery" id="gallery">
     <div class="grid-item"><img src="assets/images/low-res/img01-low.webp" data-src="assets/images/high-res/img01-high.webp" alt="Beach Travel" class="lazy"></div>
     <div class="grid-item"><img src="assets/images/low-res/img02-low.webp" data-src="assets/images/high-res/img02-high.webp" alt="Nature Mountains" class="lazy"></div>
@@ -54,42 +54,36 @@
   <!-- Scripts -->
   <script src="js/lazyload.js"></script>
   <script src="js/search.js"></script>
+
+  <!-- Masonry & imagesLoaded -->
   <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+  <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      // Tags toggle
-      const searchBar = document.getElementById("search-bar");
-      const tags = document.getElementById("tags");
-      searchBar.addEventListener("focus", () => {
-        tags.style.display = "block";
-      });
-      document.addEventListener("click", (e) => {
-        if (!searchBar.contains(e.target) && !tags.contains(e.target)) {
-          tags.style.display = "none";
-        }
-      });
-
-      // Theme toggle
-      const toggle = document.getElementById("theme-switch");
-      const body = document.body;
-      if (localStorage.getItem("theme") === "dark") {
-        body.classList.add("dark-mode");
-        toggle.checked = true;
-      }
-      toggle.addEventListener("change", () => {
-        body.classList.toggle("dark-mode");
-        localStorage.setItem("theme", body.classList.contains("dark-mode") ? "dark" : "light");
-      });
-
-      // Masonry init
-      window.msnry = new Masonry('#gallery', {
-        itemSelector: '.grid-item',
-        columnWidth: '.grid-item',
-        gutter: 20,
-        percentPosition: true
+      const grid = document.querySelector('#gallery');
+      imagesLoaded(grid, () => {
+        window.msnry = new Masonry(grid, {
+          itemSelector: '.grid-item',
+          columnWidth: '.grid-item',
+          gutter: 20,
+          percentPosition: true
+        });
       });
     });
+
+    // Theme toggle logic here (your existing code)
+    const toggle = document.getElementById("theme-switch");
+    const body = document.body;
+    if (localStorage.getItem("theme") === "dark") {
+      body.classList.add("dark-mode");
+      toggle.checked = true;
+    }
+    toggle.addEventListener("change", () => {
+      body.classList.toggle("dark-mode");
+      localStorage.setItem("theme", body.classList.contains("dark-mode") ? "dark" : "light");
+    });
   </script>
+
 </body>
 </html>
