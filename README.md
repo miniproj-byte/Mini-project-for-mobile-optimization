@@ -40,7 +40,7 @@ progressive-image-gallery/
 - Hirthikk 42130695
 - Nancy    ECE
 - Ashwanth 42130682
-- Priya v 42130360
+- Priya v velu
 - Priya Dharshini
 ## Team Roles and Contributions
 
