@@ -3,18 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <title>MyIntern Project 1</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="css/style.css">
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const searchBar = document.getElementById('search-bar');
       const tags = document.getElementById('tags');
-
-      // Show tags on search bar focus
       searchBar.addEventListener('focus', () => {
         tags.style.display = 'block';
       });
-
-      // Hide tags if clicking outside
       document.addEventListener('click', function (e) {
         if (!searchBar.contains(e.target) && !tags.contains(e.target)) {
           tags.style.display = 'none';
