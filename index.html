@@ -4,32 +4,32 @@
   <meta charset="UTF-8" />
   <title>MyIntern Project 1</title>
   <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
 
+ <!-- Header Container -->
+<div class="header">
   <!-- Logo -->
-  <div align="center">
+  <div class="logo">
     <img src="https://i.postimg.cc/1tXr2cLc/1000193832-removebg-preview.png" alt="T6 Performance Means Pixels">
   </div>
 
-  <!-- Theme Toggle Switch -->
-  <div id="theme-toggle">
-    <label class="switch">
-      <input type="checkbox" id="theme-switch" />
-      <span class="slider round"></span>
-    </label>
-  </div>
-
-  <!-- Search + Tags -->
-  <div align="center">
-    <input id="search-bar" type="search" placeholder="Search here..." />
-    <div id="tags" style="display: none;">
-      <label><input type="checkbox" value="beach"> Beach</label>
-      <label><input type="checkbox" value="travel"> Travel</label>
-      <label><input type="checkbox" value="nature"> Nature</label>
-      <label><input type="checkbox" value="mountains"> Mountains</label>
+  <!-- Search and Toggle Container -->
+  <div class="search-toggle">
+    <!-- Theme Toggle Switch -->
+    <div id="theme-toggle">
+      <button id="theme-switch">
+        <i id="theme-icon" class="fas fa-sun"></i>
+      </button>
     </div>
-  </div>
+
+    <!-- Search Bar -->
+    <input id="search-bar" type="search" placeholder="Search here..." />
+  </div>
+</div>
+
+  
 
   <!-- Gallery -->
   <div class="gallery">
