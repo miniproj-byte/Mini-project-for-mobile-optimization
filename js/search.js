@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   const searchInput = document.getElementById("search-bar");
   const tagCheckboxes = document.querySelectorAll("#tags input[type='checkbox']");
-  const images = document.querySelectorAll(".gallery img");
+  const items = document.querySelectorAll(".grid-item");
 
   function filterImages() {
     const searchText = searchInput.value.toLowerCase().trim();
@@ -9,12 +9,16 @@ document.addEventListener("DOMContentLoaded", function () {
       .filter(cb => cb.checked)
       .map(cb => cb.value.toLowerCase());
 
-    images.forEach(img => {
-      const alt = img.alt.toLowerCase();
+    items.forEach(item => {
+      const alt = item.querySelector("img").alt.toLowerCase();
       const matchesSearch = !searchText || alt.includes(searchText);
       const matchesTags = selectedTags.length === 0 || selectedTags.some(tag => alt.includes(tag));
-      img.style.display = (matchesSearch && matchesTags) ? "" : "none";
+      item.style.display = (matchesSearch && matchesTags) ? "" : "none";
     });
+
+    if (window.msnry) {
+      window.msnry.layout();
+    }
   }
 
   searchInput.addEventListener("input", filterImages);

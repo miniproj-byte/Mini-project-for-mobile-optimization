@@ -31,40 +31,40 @@
     </div>
   </div>
 
-  <!-- Gallery -->
-  <div class="gallery">
-    <!-- Repeat for all images -->
-    <img src="assets/images/low-res/img01-low.webp" data-src="assets/images/high-res/img01-high.webp" alt="Beach Travel" class="lazy">
-    <img src="assets/images/low-res/img02-low.webp" data-src="assets/images/high-res/img02-high.webp" alt="Nature Mountains" class="lazy">
-    <img src="assets/images/low-res/img03-low.webp" data-src="assets/images/high-res/img03-high.webp" alt="Travel Mountains" class="lazy">
-    <img src="assets/images/low-res/img04-low.webp" data-src="assets/images/high-res/img04-high.webp" alt="Beach Nature" class="lazy">
-    <img src="assets/images/low-res/img05-low.webp" data-src="assets/images/high-res/img05-high.webp" alt="Beach" class="lazy">
-    <img src="assets/images/low-res/img06-low.webp" data-src="assets/images/high-res/img06-high.webp" alt="Nature" class="lazy">
-    <img src="assets/images/low-res/img07-low.webp" data-src="assets/images/high-res/img07-high.webp" alt="Mountains" class="lazy">
-    <img src="assets/images/low-res/img08-low.webp" data-src="assets/images/high-res/img08-high.webp" alt="Travel Beach" class="lazy">
-    <img src="assets/images/low-res/img09-low.webp" data-src="assets/images/high-res/img09-high.webp" alt="Travel" class="lazy">
-    <img src="assets/images/low-res/img10-low.webp" data-src="assets/images/high-res/img10-high.webp" alt="Nature Beach" class="lazy">
-    <img src="assets/images/low-res/img11-low.webp" data-src="assets/images/high-res/img11-high.webp" alt="Mountains Beach" class="lazy">
-    <img src="assets/images/low-res/img12-low.webp" data-src="assets/images/high-res/img12-high.webp" alt="Travel Nature" class="lazy">
-    <img src="assets/images/low-res/img13-low.webp" data-src="assets/images/high-res/img13-high.webp" alt="Nature Travel" class="lazy">
-    <img src="assets/images/low-res/img14-low.webp" data-src="assets/images/high-res/img14-high.webp" alt="Mountains Nature" class="lazy">
-    <img src="assets/images/low-res/img15-low.webp" data-src="assets/images/high-res/img15-high.webp" alt="Beach Mountains" class="lazy">
-    <img src="assets/images/low-res/img16-low.webp" data-src="assets/images/high-res/img16-high.webp" alt="Travel Beach" class="lazy">
+  <!-- Gallery (Masonry-ready) -->
+  <div class="gallery" id="gallery">
+    <div class="grid-item"><img src="assets/images/low-res/img01-low.webp" data-src="assets/images/high-res/img01-high.webp" alt="Beach Travel" class="lazy"></div>
+    <div class="grid-item"><img src="assets/images/low-res/img02-low.webp" data-src="assets/images/high-res/img02-high.webp" alt="Nature Mountains" class="lazy"></div>
+    <div class="grid-item"><img src="assets/images/low-res/img03-low.webp" data-src="assets/images/high-res/img03-high.webp" alt="Travel Mountains" class="lazy"></div>
+    <div class="grid-item"><img src="assets/images/low-res/img04-low.webp" data-src="assets/images/high-res/img04-high.webp" alt="Beach Nature" class="lazy"></div>
+    <div class="grid-item"><img src="assets/images/low-res/img05-low.webp" data-src="assets/images/high-res/img05-high.webp" alt="Beach" class="lazy"></div>
+    <div class="grid-item"><img src="assets/images/low-res/img06-low.webp" data-src="assets/images/high-res/img06-high.webp" alt="Nature" class="lazy"></div>
+    <div class="grid-item"><img src="assets/images/low-res/img07-low.webp" data-src="assets/images/high-res/img07-high.webp" alt="Mountains" class="lazy"></div>
+    <div class="grid-item"><img src="assets/images/low-res/img08-low.webp" data-src="assets/images/high-res/img08-high.webp" alt="Travel Beach" class="lazy"></div>
+    <div class="grid-item"><img src="assets/images/low-res/img09-low.webp" data-src="assets/images/high-res/img09-high.webp" alt="Travel" class="lazy"></div>
+    <div class="grid-item"><img src="assets/images/low-res/img10-low.webp" data-src="assets/images/high-res/img10-high.webp" alt="Nature Beach" class="lazy"></div>
+    <div class="grid-item"><img src="assets/images/low-res/img11-low.webp" data-src="assets/images/high-res/img11-high.webp" alt="Mountains Beach" class="lazy"></div>
+    <div class="grid-item"><img src="assets/images/low-res/img12-low.webp" data-src="assets/images/high-res/img12-high.webp" alt="Travel Nature" class="lazy"></div>
+    <div class="grid-item"><img src="assets/images/low-res/img13-low.webp" data-src="assets/images/high-res/img13-high.webp" alt="Nature Travel" class="lazy"></div>
+    <div class="grid-item"><img src="assets/images/low-res/img14-low.webp" data-src="assets/images/high-res/img14-high.webp" alt="Mountains Nature" class="lazy"></div>
+    <div class="grid-item"><img src="assets/images/low-res/img15-low.webp" data-src="assets/images/high-res/img15-high.webp" alt="Beach Mountains" class="lazy"></div>
+    <div class="grid-item"><img src="assets/images/low-res/img16-low.webp" data-src="assets/images/high-res/img16-high.webp" alt="Travel Beach" class="lazy"></div>
   </div>
 
   <!-- Scripts -->
   <script src="js/lazyload.js"></script>
   <script src="js/search.js"></script>
+  <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      // Show/hide tags on focus
+      // Tags toggle
       const searchBar = document.getElementById("search-bar");
       const tags = document.getElementById("tags");
-
       searchBar.addEventListener("focus", () => {
         tags.style.display = "block";
       });
-      document.addEventListener("click", function (e) {
+      document.addEventListener("click", (e) => {
         if (!searchBar.contains(e.target) && !tags.contains(e.target)) {
           tags.style.display = "none";
         }
@@ -80,6 +80,14 @@
       toggle.addEventListener("change", () => {
         body.classList.toggle("dark-mode");
         localStorage.setItem("theme", body.classList.contains("dark-mode") ? "dark" : "light");
+      });
+
+      // Masonry init
+      window.msnry = new Masonry('#gallery', {
+        itemSelector: '.grid-item',
+        columnWidth: '.grid-item',
+        gutter: 20,
+        percentPosition: true
       });
     });
   </script>
