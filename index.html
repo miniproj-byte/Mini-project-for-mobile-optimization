@@ -1,32 +1,84 @@
-<!-- Logo Section -->
-<div align="center">
-  <img src="logo.png" alt="T6 Performance Means Pixels">
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MyIntern Project 1</title>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const searchBar = document.getElementById('search-bar');
+      const tags = document.getElementById('tags');
 
-<!-- Search and Tags -->
-<div align="center">
-  <input id="search-bar" type="search" placeholder="Search here..." style="width: 60%; height: 30px;">
-  <div id="tags">
-    <label><input type="checkbox" value="beach"> Beach</label>
-    <label><input type="checkbox" value="travel"> Travel</label>
-    <label><input type="checkbox" value="nature"> Nature</label>
-    <label><input type="checkbox" value="mountains"> Mountains</label>
+      // Show tags on search bar focus
+      searchBar.addEventListener('focus', () => {
+        tags.style.display = 'block';
+      });
+
+      // Hide tags if clicking outside
+      document.addEventListener('click', function (e) {
+        if (!searchBar.contains(e.target) && !tags.contains(e.target)) {
+          tags.style.display = 'none';
+        }
+      });
+    });
+  </script>
+</head>
+<body>
+
+  <!-- Logo Section -->
+  <div align="center">
+    <img src="https://i.postimg.cc/1tXr2cLc/1000193832-removebg-preview.png" alt="T6 Performance Means Pixels">
   </div>
-</div>
 
-<!-- Image Gallery -->
-<table align="center">
-  <tr>
-    <td><img src="img1.jpg" alt="Beach Image 1"></td>
-    <td><img src="img2.jpg" alt="Travel Image 2"></td>
-  </tr>
-  <tr>
-    <td><img src="img3.jpg" alt="Nature Image 3"></td>
-    <td><img src="img4.jpg" alt="Mountains Image 4"></td>
-  </tr>
-  <tr>
-    <td><img src="img5.jpg" alt="Travel Beach Image 5"></td>
-    <td><img src="img6.jpg" alt="Nature Mountains Image 6"></td>
-  </tr>
-</table>
+  <!-- Search and Tags -->
+  <div align="center">
+    <input id="search-bar" type="search" placeholder="Search here..." style="width: 60%; height: 30px;">
+    <div id="tags" style="display: none;">
+      <label><input type="checkbox" value="beach"> Beach</label>
+      <label><input type="checkbox" value="travel"> Travel</label>
+      <label><input type="checkbox" value="nature"> Nature</label>
+      <label><input type="checkbox" value="mountains"> Mountains</label>
+    </div>
+  </div>
 
+  <!-- Image Gallery -->
+  <table align="center">
+    <tr>
+      <td><img src="assets/images/low-res/img01-low.webp" data-src="assets/images/high-res/img01-high.webp" alt="Beach Travel" class="lazy"></td>
+      <td><img src="assets/images/low-res/img02-low.webp" data-src="assets/images/high-res/img02-high.webp" alt="Nature Mountains" class="lazy"></td>
+    </tr>
+    <tr>
+      <td><img src="assets/images/low-res/img03-low.webp" data-src="assets/images/high-res/img03-high.webp" alt="Travel Mountains" class="lazy"></td>
+      <td><img src="assets/images/low-res/img04-low.webp" data-src="assets/images/high-res/img04-high.webp" alt="Beach Nature" class="lazy"></td>
+    </tr>
+    <tr>
+      <td><img src="assets/images/low-res/img05-low.webp" data-src="assets/images/high-res/img05-high.webp" alt="Beach" class="lazy"></td>
+      <td><img src="assets/images/low-res/img06-low.webp" data-src="assets/images/high-res/img06-high.webp" alt="Nature" class="lazy"></td>
+    </tr>
+    <tr>
+      <td><img src="assets/images/low-res/img07-low.webp" data-src="assets/images/high-res/img07-high.webp" alt="Mountains" class="lazy"></td>
+      <td><img src="assets/images/low-res/img08-low.webp" data-src="assets/images/high-res/img08-high.webp" alt="Travel Beach" class="lazy"></td>
+    </tr>
+    <tr>
+      <td><img src="assets/images/low-res/img09-low.webp" data-src="assets/images/high-res/img09-high.webp" alt="Travel" class="lazy"></td>
+      <td><img src="assets/images/low-res/img10-low.webp" data-src="assets/images/high-res/img10-high.webp" alt="Nature Beach" class="lazy"></td>
+    </tr>
+    <tr>
+      <td><img src="assets/images/low-res/img11-low.webp" data-src="assets/images/high-res/img11-high.webp" alt="Mountains Beach" class="lazy"></td>
+      <td><img src="assets/images/low-res/img12-low.webp" data-src="assets/images/high-res/img12-high.webp" alt="Travel Nature" class="lazy"></td>
+    </tr>
+    <tr>
+      <td><img src="assets/images/low-res/img13-low.webp" data-src="assets/images/high-res/img13-high.webp" alt="Nature Travel" class="lazy"></td>
+      <td><img src="assets/images/low-res/img14-low.webp" data-src="assets/images/high-res/img14-high.webp" alt="Mountains Nature" class="lazy"></td>
+    </tr>
+    <tr>
+      <td><img src="assets/images/low-res/img15-low.webp" data-src="assets/images/high-res/img15-high.webp" alt="Beach Mountains" class="lazy"></td>
+      <td><img src="assets/images/low-res/img16-low.webp" data-src="assets/images/high-res/img16-high.webp" alt="Travel Beach" class="lazy"></td>
+    </tr>
+  </table>
+
+  <!-- JS for lazy loading and search -->
+  <script src="js/lazyload.js"></script>
+  <script src="js/search.js"></script>
+
+</body>
+</html>
