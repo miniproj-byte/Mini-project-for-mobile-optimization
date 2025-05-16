@@ -76,7 +76,7 @@ img[alt="T6 Performance Means Pixels"] {
   transition: filter 0.4s ease, transform 0.3s ease;
 }
 
-.gallery img.loaded {
+img.loaded {
   filter: blur(0);
 }
 
