@@ -1,11 +1,9 @@
-/* General Reset & Base Styles */
 body {
   font-family: 'Segoe UI', sans-serif;
   margin: 0;
   padding: 0;
   background: #f0f0f0;
   color: #222;
-  transition: background 0.3s ease, color 0.3s ease;
 }
 
 body.dark-mode {
@@ -13,23 +11,16 @@ body.dark-mode {
   color: #eee;
 }
 
-/* Logo */
 .logo-container {
   text-align: center;
   margin-top: 20px;
 }
 
-.logo-container img {
-  max-width: 200px;
-  height: auto;
-}
-
-/* Theme Toggle */
 #theme-toggle {
   position: fixed;
   top: 20px;
   right: 20px;
-  z-index: 999;
+  z-index: 1000;
 }
 
 .switch {
@@ -38,13 +29,11 @@ body.dark-mode {
   width: 50px;
   height: 26px;
 }
-
 .switch input {
   opacity: 0;
   width: 0;
   height: 0;
 }
-
 .slider {
   position: absolute;
   cursor: pointer;
@@ -56,7 +45,6 @@ body.dark-mode {
   bottom: 0;
   transition: 0.4s;
 }
-
 .slider:before {
   content: "";
   position: absolute;
@@ -68,25 +56,20 @@ body.dark-mode {
   border-radius: 50%;
   transition: 0.4s;
 }
-
 input:checked + .slider {
   background-color: #666;
 }
-
 input:checked + .slider:before {
   transform: translateX(24px);
 }
 
-/* Controls (Search + Tags) */
 .controls {
   text-align: center;
   margin: 20px auto;
-  padding: 0 1rem;
 }
 
 #search-bar {
   width: 60%;
-  max-width: 500px;
   height: 36px;
   padding: 0 12px;
   font-size: 1rem;
@@ -94,19 +77,15 @@ input:checked + .slider:before {
   background: #fff;
   color: #000;
   border: 1px solid #ccc;
-  transition: background 0.3s ease, color 0.3s ease;
 }
-
 body.dark-mode #search-bar {
   background: #1e1e1e;
   color: #eee;
   border: 1px solid #666;
 }
-
 #search-bar::placeholder {
   color: #888;
 }
-
 #tags {
   margin-top: 1rem;
   display: flex;
@@ -114,54 +93,35 @@ body.dark-mode #search-bar {
   flex-wrap: wrap;
   gap: 1rem;
 }
-
 #tags label {
   color: inherit;
   cursor: pointer;
-  font-size: 0.95rem;
 }
-
 #tags input {
   margin-right: 0.3rem;
 }
 
-/* Gallery Layout */
 .gallery {
-  max-width: 1200px;
+  max-width: 1000px;
   margin: 2rem auto;
   column-count: 2;
   column-gap: 20px;
-  padding: 0 1rem;
 }
-
 .grid-item {
   margin-bottom: 20px;
   break-inside: avoid;
 }
-
 .grid-item img {
   width: 100%;
   border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
   filter: blur(5px) brightness(0.9);
   transition: filter 0.4s ease, transform 0.3s ease;
 }
-
 img.loaded {
   filter: blur(0) brightness(1);
 }
-
 .grid-item img:hover {
   transform: scale(1.03);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .gallery {
-    column-count: 1;
-  }
-
-  #search-bar {
-    width: 90%;
-  }
-}
