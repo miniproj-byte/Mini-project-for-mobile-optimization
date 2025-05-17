@@ -25,7 +25,6 @@ document.addEventListener("DOMContentLoaded", () => {
     gallery.appendChild(div);
   });
 
-  // Masonry init
   const msnry = new Masonry(gallery, { itemSelector: ".grid-item", gutter: 10 });
   window.msnry = msnry;
 
@@ -33,7 +32,6 @@ document.addEventListener("DOMContentLoaded", () => {
     msnry.layout();
   });
 
-  // Lazy load
   const lazyImages = document.querySelectorAll("img.lazy");
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
@@ -46,7 +44,6 @@ document.addEventListener("DOMContentLoaded", () => {
           img.src = highRes;
           img.classList.add("loaded");
           img.classList.remove("blur");
-          img.removeAttribute("data-src");
           observer.unobserve(img);
           msnry.layout();
         };
@@ -56,7 +53,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   lazyImages.forEach(img => observer.observe(img));
 
-  // Search + tag filter
   const searchInput = document.getElementById("search-bar");
   const checkboxContainer = document.getElementById("tags");
   const checkboxes = checkboxContainer.querySelectorAll('input[type="checkbox"]');
@@ -91,7 +87,6 @@ document.addEventListener("DOMContentLoaded", () => {
   searchInput.addEventListener("input", filterImages);
   checkboxes.forEach(cb => cb.addEventListener("change", filterImages));
 
-  // Theme toggle
   const themeSwitch = document.getElementById("theme-switch");
   themeSwitch.addEventListener("change", () => {
     document.body.classList.toggle("dark", themeSwitch.checked);
@@ -130,3 +125,4 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.target === popup) popup.classList.add("hidden");
   });
 });
+

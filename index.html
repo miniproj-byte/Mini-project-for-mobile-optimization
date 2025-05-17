@@ -2,29 +2,25 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Optipix Gallery</title>
   <link rel="stylesheet" href="css/styles.css" />
-  <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
-  <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
 </head>
 <body>
   <header>
-    <div id="logo">Optipix</div>
-
-    <input type="text" id="search-bar" placeholder="Search images by tag..." autocomplete="off" />
-
-    <div id="tags" style="display:none;">
-      <label><input type="checkbox" value="beach" /> Beach</label>
-      <label><input type="checkbox" value="nature" /> Nature</label>
-      <label><input type="checkbox" value="mountains" /> Mountains</label>
-      <label><input type="checkbox" value="travel" /> Travel</label>
-      <!-- Add more tags as needed -->
+    <div class="logo">Optipix</div>
+    <div class="search-container">
+      <input type="text" id="search-bar" placeholder="Search by tag..." />
+      <div id="tags" class="tag-checkboxes">
+        <label><input type="checkbox" value="beach" /> Beach</label>
+        <label><input type="checkbox" value="nature" /> Nature</label>
+        <label><input type="checkbox" value="mountains" /> Mountains</label>
+        <label><input type="checkbox" value="travel" /> Travel</label>
+      </div>
     </div>
-
-    <label id="theme-label">
-      Dark Mode
+    <label class="theme-toggle">
       <input type="checkbox" id="theme-switch" />
+      <span>🌙</span>
     </label>
   </header>
 
@@ -32,15 +28,16 @@
     <div id="gallery" class="grid"></div>
   </main>
 
-  <!-- Popup Modal -->
-  <div id="popup" class="hidden">
-    <div id="popup-content">
-      <button id="close-popup">×</button>
-      <div id="spinner">Loading...</div>
-      <img id="popup-img" alt="" style="display:none" />
-    </div>
+  <!-- Popup -->
+  <div id="popup" class="popup hidden">
+    <div id="spinner" class="spinner"></div>
+    <img id="popup-img" />
+    <button id="close-popup">×</button>
   </div>
 
-  <script src="js/main.js" defer></script>
+  <!-- Scripts -->
+  <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+  <script src="https://unpkg.com/imagesloaded@5/imagesloaded.pkgd.min.js"></script>
+  <script src="js/main.js"></script>
 </body>
 </html>
