@@ -1,11 +1,9 @@
 const searchInput = document.getElementById('search-bar');
 const checkboxContainer = document.getElementById('tags');
-const checkboxes = checkboxContainer.querySelectorAll('input[type="checkbox"]');
 
 function filterImages() {
   const searchValue = searchInput.value.trim().toLowerCase();
-  const selectedTags = Array.from(checkboxes)
-    .filter(cb => cb.checked)
+  const selectedTags = Array.from(checkboxContainer.querySelectorAll('input[type="checkbox"]:checked'))
     .map(cb => cb.value.toLowerCase());
 
   const images = document.querySelectorAll('img.lazy');
@@ -20,13 +18,14 @@ function filterImages() {
 }
 
 searchInput.addEventListener('input', filterImages);
-checkboxes.forEach(cb => cb.addEventListener('change', filterImages));
+checkboxContainer.querySelectorAll('input[type="checkbox"]').forEach(cb =>
+  cb.addEventListener('change', filterImages)
+);
 
-// Tag visibility on search bar focus
+// Show/hide tags
 searchInput.addEventListener('focus', () => {
   checkboxContainer.classList.add('visible');
 });
-
 document.addEventListener('click', (e) => {
   if (!searchInput.contains(e.target) && !checkboxContainer.contains(e.target)) {
     checkboxContainer.classList.remove('visible');

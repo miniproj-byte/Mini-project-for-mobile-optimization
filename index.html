@@ -21,9 +21,11 @@
     </label>
   </div>
 
-  <!-- Search and Tags -->
+  <!-- Controls (Search & Tags) -->
   <div class="controls">
-    <input id="search-bar" type="search" placeholder="Search here..." />
+    <div class="search-wrapper">
+      <input id="search-bar" type="search" placeholder="Search here..." />
+    </div>
     <div id="tags">
       <label><input type="checkbox" value="beach" /> Beach</label>
       <label><input type="checkbox" value="travel" /> Travel</label>
@@ -32,12 +34,15 @@
     </div>
   </div>
 
-  <!-- Gallery Container -->
+  <!-- Gallery -->
   <div class="gallery" id="gallery"></div>
 
-  <!-- Scripts -->
+  <!-- Masonry & Lazy Load -->
   <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
   <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+  
+  <!-- Main Logic -->
+  <script src="js/main.js"></script>
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
@@ -59,7 +64,6 @@
       }
       gallery.innerHTML = html;
 
-      // Lazy load
       const lazyImages = [].slice.call(document.querySelectorAll("img.lazy"));
       if ("IntersectionObserver" in window) {
         const lazyObserver = new IntersectionObserver((entries, observer) => {
@@ -83,13 +87,11 @@
         });
       }
 
-      // Initialize Masonry layout
       imagesLoaded(gallery, () => {
         window.msnry = new Masonry(gallery, {
           itemSelector: '.grid-item',
           gutter: 20,
           percentPosition: true
-          // columnWidth removed — let Masonry auto-calculate
         });
       });
 
@@ -106,8 +108,5 @@
       });
     });
   </script>
-
-  <!-- Filtering Script -->
-  <script src="js/main.js"></script>
 </body>
 </html>
