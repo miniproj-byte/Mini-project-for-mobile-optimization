@@ -1,129 +1,83 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const galleryContainer = document.getElementById('gallery');
-  const totalImages = 32;
-
-  // Generate gallery images dynamically
-  const altTags = ['beach', 'travel', 'nature', 'mountains'];
-  galleryContainer.innerHTML = [...Array(totalImages)].map((_, i) => {
-    const imgNum = (i + 1).toString().padStart(2, '0');
-    const alt = altTags[i % altTags.length] + ' image ' + imgNum;
-    return `
-      <div class="grid-item">
-        <img
-          class="lazy"
-          src="assets/images/low-res/img${imgNum}-low.webp"
-          data-src="assets/images/high-res/img${imgNum}-high.webp"
-          alt="${alt}"
-          loading="lazy"
-        />
-      </div>
-    `;
-  }).join('');
-
-  // Initialize Masonry after images loaded
-  imagesLoaded(galleryContainer, () => {
-    window.msnry = new Masonry(galleryContainer, {
-      itemSelector: '.grid-item',
-      columnWidth: '.grid-item',
-      gutter: 20,
-      percentPosition: true,
-    });
-    console.log("Masonry initialized");
+  const imageData = [...Array(32)].map((_, i) => {
+    const num = (i + 1).toString().padStart(2, "0");
+    return {
+      title: `Image ${num}`,
+      lowRes: `assets/images/low/image${num}.webp`,
+      highRes: `assets/images/high/image${num}.webp`,
+      tags: i % 2 === 0 ? ["beach", "nature"] : ["mountains", "travel"]
+    };
   });
 
-  // Lazy loading with debug logs
-  const lazyImages = document.querySelectorAll("img.lazy");
-  if ("IntersectionObserver" in window) {
-    const observer = new IntersectionObserver((entries, observer) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const img = entry.target;
-          const highResSrc = img.getAttribute("data-src");
-          if (highResSrc) {
-            console.log(`Loading high-res image: ${highResSrc}`);
-            const temp = new Image();
-            temp.src = highResSrc;
-            temp.onload = () => {
-              img.src = highResSrc;
-              img.classList.add("loaded");
-              img.removeAttribute("data-src");
-              observer.unobserve(img);
-              if (window.msnry) {
-                window.msnry.layout();
-                console.log("Masonry layout updated after image load");
-              }
-            };
-            temp.onerror = () => {
-              console.error(`Failed to load image: ${highResSrc}`);
-            };
-          }
-        }
-      });
-    });
+  const gallery = document.getElementById("gallery");
 
-    lazyImages.forEach(img => observer.observe(img));
-  } else {
-    // fallback
-    lazyImages.forEach(img => {
-      const highResSrc = img.getAttribute("data-src");
-      if (highResSrc) {
-        img.src = highResSrc;
-        img.classList.add("loaded");
-        img.removeAttribute("data-src");
+  imageData.forEach(data => {
+    const div = document.createElement("div");
+    div.className = "grid-item";
+    div.innerHTML = `
+      <img 
+        src="${data.lowRes}" 
+        data-src="${data.highRes}" 
+        alt="${data.tags.join(" ")}" 
+        class="lazy blur" />
+    `;
+    gallery.appendChild(div);
+  });
+
+  const lazyImages = document.querySelectorAll("img.lazy");
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const img = entry.target;
+        const highRes = img.dataset.src;
+        const temp = new Image();
+        temp.src = highRes;
+        temp.onload = () => {
+          img.src = highRes;
+          img.classList.add("loaded");
+          img.classList.remove("blur");
+          observer.unobserve(img);
+        };
       }
+    });
+  });
+
+  lazyImages.forEach(img => observer.observe(img));
+
+  const searchInput = document.getElementById("search-bar");
+  const checkboxContainer = document.getElementById("tags");
+  const checkboxes = checkboxContainer.querySelectorAll('input[type="checkbox"]');
+
+  function filterImages() {
+    const query = searchInput.value.toLowerCase().trim();
+    const selectedTags = [...checkboxes].filter(cb => cb.checked).map(cb => cb.value.toLowerCase());
+
+    document.querySelectorAll("#gallery .grid-item").forEach(item => {
+      const img = item.querySelector("img");
+      const alt = img.alt.toLowerCase();
+      const searchMatch = query === "" || alt.includes(query);
+      const tagMatch = selectedTags.length === 0 || selectedTags.some(tag => alt.includes(tag));
+      item.style.display = searchMatch && tagMatch ? "" : "none";
     });
   }
 
-  // Search and filter
-  const searchInput = document.getElementById('search-bar');
-  const checkboxContainer = document.getElementById('tags');
-  const checkboxes = checkboxContainer.querySelectorAll('input[type="checkbox"]');
-  const images = document.querySelectorAll('.grid-item img');
-
-function filterImages() {
-  const searchValue = searchInput.value.trim().toLowerCase();
-  const selectedTags = Array.from(checkboxes)
-    .filter(cb => cb.checked)
-    .map(cb => cb.value.toLowerCase());
-
-  images.forEach(img => {
-    const alt = img.alt.toLowerCase();
-
-    const matchesSearch = alt.includes(searchValue);
-    const matchesTags = selectedTags.length === 0 ? true : selectedTags.every(tag => alt.includes(tag));
-
-    // Show only if matches search AND matches all selected tags
-    img.closest('.grid-item').style.display = (matchesSearch && matchesTags) ? '' : 'none';
+  searchInput.addEventListener("focus", () => {
+    checkboxContainer.style.display = "block";
   });
 
-  if (window.msnry) window.msnry.layout();
-}
-
-
-  searchInput.addEventListener('input', filterImages);
-  checkboxes.forEach(cb => cb.addEventListener('change', filterImages));
-
-  // Show/hide tags on focus/blur with delay
-  searchInput.addEventListener('focus', () => {
-    checkboxContainer.style.display = 'flex';
-  });
-  searchInput.addEventListener('blur', () => {
+  searchInput.addEventListener("blur", () => {
     setTimeout(() => {
-      if (document.activeElement.parentElement.parentElement !== checkboxContainer) {
-        checkboxContainer.style.display = 'none';
+      if (!checkboxContainer.contains(document.activeElement)) {
+        checkboxContainer.style.display = "none";
       }
     }, 200);
   });
 
-  // Theme toggle (light/dark)
-  const toggle = document.getElementById("theme-switch");
-  const body = document.body;
-  if (localStorage.getItem("theme") === "dark") {
-    body.classList.add("dark-mode");
-    toggle.checked = true;
-  }
-  toggle.addEventListener("change", () => {
-    body.classList.toggle("dark-mode");
-    localStorage.setItem("theme", body.classList.contains("dark-mode") ? "dark" : "light");
+  searchInput.addEventListener("input", filterImages);
+  checkboxes.forEach(cb => cb.addEventListener("change", filterImages));
+
+  const themeSwitch = document.getElementById("theme-switch");
+  themeSwitch.addEventListener("change", () => {
+    document.body.classList.toggle("dark", themeSwitch.checked);
   });
 });
