@@ -26,17 +26,16 @@ document.addEventListener("DOMContentLoaded", () => {
     gallery.appendChild(div);
   });
 
-  // Reflow Masonry after images are loaded
-  imagesLoaded(gallery, () => {
-    window.msnry = new Masonry(gallery, {
-      itemSelector: ".grid-item",
-      columnWidth: ".grid-item",
-      gutter: 20,
-      percentPosition: true
-    });
+  const msnry = new Masonry(gallery, {
+    itemSelector: ".grid-item",
+    gutter: 20,
+    percentPosition: true
   });
 
-  // Lazy loading with IntersectionObserver
+  imagesLoaded(gallery, () => {
+    msnry.layout();
+  });
+
   const lazyImages = document.querySelectorAll("img.lazy");
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
@@ -50,24 +49,21 @@ document.addEventListener("DOMContentLoaded", () => {
           img.classList.add("loaded");
           img.classList.remove("blur");
           observer.unobserve(img);
-          if (window.msnry) window.msnry.layout();
+          msnry.layout();
         };
       }
     });
-  });
+  }, { rootMargin: "200px" });
 
   lazyImages.forEach(img => observer.observe(img));
 
-  // Filter functionality
   const searchInput = document.getElementById("search-bar");
   const checkboxContainer = document.getElementById("tags");
   const checkboxes = checkboxContainer.querySelectorAll('input[type="checkbox"]');
 
   function filterImages() {
     const searchTerm = searchInput.value.toLowerCase().trim();
-    const selectedTags = [...checkboxes]
-      .filter(cb => cb.checked)
-      .map(cb => cb.value.toLowerCase());
+    const selectedTags = [...checkboxes].filter(cb => cb.checked).map(cb => cb.value.toLowerCase());
 
     document.querySelectorAll(".grid-item").forEach(item => {
       const alt = item.querySelector("img").alt.toLowerCase();
@@ -76,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
       item.style.display = matchesSearch && matchesTags ? "" : "none";
     });
 
-    if (window.msnry) window.msnry.layout();
+    msnry.layout();
   }
 
   searchInput.addEventListener("focus", () => {
@@ -94,12 +90,12 @@ document.addEventListener("DOMContentLoaded", () => {
   searchInput.addEventListener("input", filterImages);
   checkboxes.forEach(cb => cb.addEventListener("change", filterImages));
 
-  // Theme toggle
   const themeSwitch = document.getElementById("theme-switch");
   if (localStorage.getItem("theme") === "dark") {
     document.body.classList.add("dark");
     themeSwitch.checked = true;
   }
+
   themeSwitch.addEventListener("change", () => {
     document.body.classList.toggle("dark", themeSwitch.checked);
     localStorage.setItem("theme", themeSwitch.checked ? "dark" : "light");

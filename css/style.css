@@ -64,25 +64,25 @@ body.dark .tag-checkboxes {
 }
 
 .grid {
-  column-count: 2;
-  column-gap: 1rem;
-  padding: 1rem;
   max-width: 1000px;
-  margin: 0 auto;
+  margin: 2rem auto;
 }
 
 .grid-item {
-  break-inside: avoid;
-  margin-bottom: 1rem;
+  width: 100%;
+  margin-bottom: 20px;
 }
 
 .grid-item img {
   width: 100%;
-  max-width: 100%;
+  height: auto;
+  max-height: 600px;
+  object-fit: cover;
   display: block;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  filter: blur(6px) brightness(0.9);
   transition: filter 0.3s ease;
-  border-radius: 8px;
-  filter: blur(5px) brightness(0.95);
 }
 
 img.loaded {
