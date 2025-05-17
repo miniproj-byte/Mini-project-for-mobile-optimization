@@ -8,8 +8,8 @@
 <body>
 
   <!-- Logo -->
-  <div align="center">
-    <img src="https://i.postimg.cc/1tXr2cLc/1000193832-removebg-preview.png" alt="T6 Performance Means Pixels" />
+  <div class="logo-container">
+    <img src="https://i.postimg.cc/1tXr2cLc/1000193832-removebg-preview.png" alt="Optipix Logo" />
   </div>
 
   <!-- Theme Toggle -->
@@ -20,44 +20,44 @@
     </label>
   </div>
 
-  <!-- Search + Tags -->
-  <div align="center">
+  <!-- Search and Tags -->
+  <div class="controls">
     <input id="search-bar" type="search" placeholder="Search here..." />
-    <div id="tags" style="display: none;">
+    <div id="tags">
       <label><input type="checkbox" value="beach" /> Beach</label>
       <label><input type="checkbox" value="travel" /> Travel</label>
       <label><input type="checkbox" value="nature" /> Nature</label>
       <label><input type="checkbox" value="mountains" /> Mountains</label>
+      <!-- Add more if needed -->
     </div>
   </div>
 
   <!-- Gallery -->
   <div class="gallery" id="gallery">
-    <div class="grid-item"><img src="assets/images/low-res/img01-low.webp" data-src="assets/images/high-res/img01-high.webp" alt="Beach Travel" class="lazy" /></div>
-    <div class="grid-item"><img src="assets/images/low-res/img02-low.webp" data-src="assets/images/high-res/img02-high.webp" alt="Nature Mountains" class="lazy" /></div>
-    <div class="grid-item"><img src="assets/images/low-res/img03-low.webp" data-src="assets/images/high-res/img03-high.webp" alt="Travel Mountains" class="lazy" /></div>
-    <div class="grid-item"><img src="assets/images/low-res/img04-low.webp" data-src="assets/images/high-res/img04-high.webp" alt="Beach Nature" class="lazy" /></div>
-    <div class="grid-item"><img src="assets/images/low-res/img05-low.webp" data-src="assets/images/high-res/img05-high.webp" alt="Beach" class="lazy" /></div>
-    <div class="grid-item"><img src="assets/images/low-res/img06-low.webp" data-src="assets/images/high-res/img06-high.webp" alt="Nature" class="lazy" /></div>
-    <div class="grid-item"><img src="assets/images/low-res/img07-low.webp" data-src="assets/images/high-res/img07-high.webp" alt="Mountains" class="lazy" /></div>
-    <div class="grid-item"><img src="assets/images/low-res/img08-low.webp" data-src="assets/images/high-res/img08-high.webp" alt="Travel Beach" class="lazy" /></div>
-    <div class="grid-item"><img src="assets/images/low-res/img09-low.webp" data-src="assets/images/high-res/img09-high.webp" alt="Travel" class="lazy" /></div>
-    <div class="grid-item"><img src="assets/images/low-res/img10-low.webp" data-src="assets/images/high-res/img10-high.webp" alt="Nature Beach" class="lazy" /></div>
-    <div class="grid-item"><img src="assets/images/low-res/img11-low.webp" data-src="assets/images/high-res/img11-high.webp" alt="Mountains Beach" class="lazy" /></div>
-    <div class="grid-item"><img src="assets/images/low-res/img12-low.webp" data-src="assets/images/high-res/img12-high.webp" alt="Travel Nature" class="lazy" /></div>
-    <div class="grid-item"><img src="assets/images/low-res/img13-low.webp" data-src="assets/images/high-res/img13-high.webp" alt="Nature Travel" class="lazy" /></div>
-    <div class="grid-item"><img src="assets/images/low-res/img14-low.webp" data-src="assets/images/high-res/img14-high.webp" alt="Mountains Nature" class="lazy" /></div>
-    <div class="grid-item"><img src="assets/images/low-res/img15-low.webp" data-src="assets/images/high-res/img15-high.webp" alt="Beach Mountains" class="lazy" /></div>
-    <div class="grid-item"><img src="assets/images/low-res/img16-low.webp" data-src="assets/images/high-res/img16-high.webp" alt="Travel Beach" class="lazy" /></div>
+    <div class="grid-sizer"></div>
+
+    <!-- 32 Images -->
+    <!-- Just loop and change the alt text/tags as needed -->
+    <!-- Low-res: imgXX-low.webp | High-res: imgXX-high.webp -->
+
+    <!-- Images 1 to 32 -->
+    ${[...Array(32)].map((_, i) => {
+      const imgNum = (i + 1).toString().padStart(2, '0');
+      return `
+      <div class="grid-item">
+        <img class="lazy" 
+             src="assets/images/low-res/img${imgNum}-low.webp" 
+             data-src="assets/images/high-res/img${imgNum}-high.webp" 
+             alt="Image ${imgNum}" />
+      </div>`;
+    }).join('')}
   </div>
 
   <!-- Scripts -->
-  <script src="js/lazyload.js"></script>
-  <script src="js/search.js"></script>
-
-  <!-- Masonry & imagesLoaded -->
   <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
   <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+  <script src="js/lazyload.js"></script>
+  <script src="js/search.js"></script>
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
@@ -65,13 +65,13 @@
       imagesLoaded(grid, () => {
         window.msnry = new Masonry(grid, {
           itemSelector: '.grid-item',
-          columnWidth: '.grid-item',
+          columnWidth: '.grid-sizer',
           gutter: 20,
           percentPosition: true
         });
       });
 
-      // Theme
+      // Theme toggle
       const toggle = document.getElementById("theme-switch");
       const body = document.body;
       if (localStorage.getItem("theme") === "dark") {
@@ -84,6 +84,5 @@
       });
     });
   </script>
-
 </body>
 </html>

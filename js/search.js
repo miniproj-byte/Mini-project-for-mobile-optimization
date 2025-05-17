@@ -1,25 +1,30 @@
 const searchInput = document.getElementById('search-bar');
 const checkboxContainer = document.getElementById('tags');
-const checkboxes = checkboxContainer.querySelectorAll('input[type="checkbox"]');
+const checkboxes = checkboxContainer?.querySelectorAll('input[type="checkbox"]');
 const images = document.querySelectorAll('img');
 
 function filterImages() {
   const searchValue = searchInput.value.trim().toLowerCase();
   const selectedTags = Array.from(checkboxes)
     .filter(cb => cb.checked)
-    .map(cb => cb.value);
+    .map(cb => cb.value.toLowerCase());
 
   images.forEach(img => {
-    const alt = img.alt.toLowerCase();
-    const searchMatch = alt.includes(searchValue);
-    const tagMatch = selectedTags.length === 0 || selectedTags.some(tag => alt.includes(tag));
-    img.closest('.grid-item').style.display = (searchMatch && tagMatch) ? '' : 'none';
+    const altText = img.alt.toLowerCase();
+    const matchesSearch = altText.includes(searchValue);
+    const matchesTags = selectedTags.length === 0 || selectedTags.some(tag => altText.includes(tag));
+
+    // Show or hide image based on match
+    const wrapper = img.closest('.grid-item');
+    if (wrapper) {
+      wrapper.style.display = (matchesSearch && matchesTags) ? '' : 'none';
+    }
   });
 
-  if (window.msnry) {
-    window.msnry.layout(); // reflow after filter
-  }
+  // Re-layout Masonry after filtering
+  if (window.msnry) window.msnry.layout();
 }
 
-searchInput.addEventListener('input', filterImages);
-checkboxes.forEach(cb => cb.addEventListener('change', filterImages));
+// Event listeners
+searchInput?.addEventListener('input', filterImages);
+checkboxes?.forEach(cb => cb.addEventListener('change', filterImages));
