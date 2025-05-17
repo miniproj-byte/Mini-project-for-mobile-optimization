@@ -2,30 +2,34 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Optipix Gallery</title>
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
   <header>
-    <div class="logo">Optipix</div>
-    <div class="search-container">
-      <input type="text" id="search-bar" placeholder="Search by tag..." />
-      <div id="tags" class="tag-checkboxes">
-        <label><input type="checkbox" value="beach" /> Beach</label>
-        <label><input type="checkbox" value="nature" /> Nature</label>
-        <label><input type="checkbox" value="mountains" /> Mountains</label>
-        <label><input type="checkbox" value="travel" /> Travel</label>
-      </div>
+    <h1>Optipix Gallery</h1>
+
+    <div class="controls">
+      <input
+        type="search"
+        id="searchInput"
+        placeholder="Search by tags..."
+        autocomplete="off"
+      />
+      <label>
+        <input type="checkbox" id="darkModeToggle" />
+        Dark Mode
+      </label>
     </div>
-    <label class="theme-toggle">
-      <input type="checkbox" id="theme-switch" />
-      <span>🌙</span>
-    </label>
+
+    <div id="tagFilters" class="tag-filters hidden">
+      <!-- Tag checkboxes will be dynamically inserted here -->
+    </div>
   </header>
 
   <main>
-    <div id="gallery" class="grid"></div>
+    <div id="gallery" class="gallery"></div>
   </main>
 
   <script src="js/main.js"></script>
