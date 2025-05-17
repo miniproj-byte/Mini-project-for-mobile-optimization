@@ -35,10 +35,14 @@ body.dark-mode input:checked + .slider {
   background-color: #4caf50;
 }
 
-.logo-container {
-  text-align: center;
-  margin-top: 20px;
+.logo-container img {
+  max-width: 200px;
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
 }
+
 
 #theme-toggle {
   position: fixed;
