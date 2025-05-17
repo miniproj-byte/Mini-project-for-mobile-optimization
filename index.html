@@ -2,12 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Optipix Gallery</title>
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
   <!-- Logo -->
   <div class="logo-container">
     <img src="https://i.postimg.cc/1tXr2cLc/1000193832-removebg-preview.png" alt="Optipix Logo" />
@@ -16,8 +15,8 @@
   <!-- Theme Toggle -->
   <div id="theme-toggle">
     <label class="switch">
-      <input type="checkbox" id="toggle-theme" />
-      <span class="slider"></span>
+      <input type="checkbox" id="theme-switch" />
+      <span class="slider round"></span>
     </label>
   </div>
 
@@ -32,50 +31,93 @@
     </div>
   </div>
 
-  <!-- Gallery Container -->
+  <!-- Gallery -->
   <div class="gallery" id="gallery"></div>
 
-  <!-- Scripts -->
-  <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
-  <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
-  
-  <!-- Your custom scripts -->
-  <script src="js/lazyload.js"></script>
-  <script src="js/search.js"></script>
-
-  <!-- Dynamic Gallery Generation -->
+  <!-- Script -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      // Generate 32 images dynamically
-      const gallery = document.getElementById('gallery');
-      let html = '';
-      for (let i = 1; i <= 32; i++) {
-        const num = i.toString().padStart(2, '0');
-        html += `
-          <div class="grid-item">
-            <img
-              class="lazy"
-              src="assets/images/low-res/img${num}-low.webp"
-              data-src="assets/images/high-res/img${num}-high.webp"
-              alt="Image ${num} nature travel"
-              loading="lazy"
-            />
-          </div>
-        `;
-      }
-      gallery.innerHTML = html;
+      const gallery = document.getElementById("gallery");
 
-      // Masonry layout init after images load
-      imagesLoaded(gallery, () => {
-        window.msnry = new Masonry(gallery, {
-          itemSelector: '.grid-item',
-          columnWidth: '.grid-item',
-          gutter: 20,
-          percentPosition: true
+      for (let i = 1; i <= 32; i++) {
+        const imgNum = i.toString().padStart(2, '0');
+        const lowSrc = `assets/images/low/image${imgNum}.webp`;
+        const highSrc = `assets/images/high/image${imgNum}.webp`;
+
+        const div = document.createElement("div");
+        div.className = "grid-item";
+        div.innerHTML = `
+          <img
+            class="lazy blur"
+            src="${lowSrc}"
+            data-src="${highSrc}"
+            alt="${i % 2 === 0 ? 'beach nature' : 'mountains travel'}"
+          />
+        `;
+        gallery.appendChild(div);
+      }
+
+      // Lazy loading logic
+      const lazyImages = document.querySelectorAll("img.lazy");
+      if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver((entries, observer) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const img = entry.target;
+              const highResSrc = img.getAttribute("data-src");
+              if (highResSrc) {
+                const temp = new Image();
+                temp.src = highResSrc;
+                temp.onload = () => {
+                  img.src = highResSrc;
+                  img.classList.add("loaded");
+                  img.removeAttribute("data-src");
+                  observer.unobserve(img);
+                };
+              }
+            }
+          });
+        }, { rootMargin: "200px" });
+
+        lazyImages.forEach(img => observer.observe(img));
+      }
+
+      // Filtering
+      const searchInput = document.getElementById("search-bar");
+      const checkboxContainer = document.getElementById("tags");
+      const checkboxes = checkboxContainer.querySelectorAll('input[type="checkbox"]');
+
+      function filterImages() {
+        const searchValue = searchInput.value.trim().toLowerCase();
+        const selectedTags = Array.from(checkboxes)
+          .filter(cb => cb.checked)
+          .map(cb => cb.value.toLowerCase());
+
+        document.querySelectorAll(".grid-item img").forEach(img => {
+          const altTags = img.alt.toLowerCase().split(" ");
+          const searchMatch = searchValue === "" || altTags.includes(searchValue);
+          const tagMatch = selectedTags.length === 0 || selectedTags.every(tag => altTags.includes(tag));
+          img.closest('.grid-item').style.display = (searchMatch && tagMatch) ? "" : "none";
         });
+      }
+
+      searchInput.addEventListener("input", filterImages);
+      checkboxes.forEach(cb => cb.addEventListener("change", filterImages));
+
+      // Checkboxes show/hide
+      searchInput.addEventListener("focus", () => {
+        checkboxContainer.style.display = "flex";
       });
 
-      // Theme toggle setup
+      searchInput.addEventListener("blur", () => {
+        setTimeout(() => {
+          if (!document.activeElement.closest("#tags")) {
+            checkboxContainer.style.display = "none";
+          }
+        }, 100);
+      });
+
+      // Theme toggle
       const toggle = document.getElementById("theme-switch");
       const body = document.body;
       if (localStorage.getItem("theme") === "dark") {
@@ -88,6 +130,5 @@
       });
     });
   </script>
-
 </body>
 </html>
