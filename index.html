@@ -34,7 +34,7 @@
   <!-- Gallery -->
   <div class="gallery" id="gallery"></div>
 
-  <!-- Script -->
+  <!-- JavaScript -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const gallery = document.getElementById("gallery");
@@ -43,90 +43,86 @@
         const imgNum = i.toString().padStart(2, '0');
         const lowSrc = `assets/images/low/image${imgNum}.webp`;
         const highSrc = `assets/images/high/image${imgNum}.webp`;
+        const tags = i % 2 === 0 ? "beach nature" : "mountains travel";
 
         const div = document.createElement("div");
         div.className = "grid-item";
         div.innerHTML = `
-          <img
-            class="lazy blur"
-            src="${lowSrc}"
-            data-src="${highSrc}"
-            alt="${i % 2 === 0 ? 'beach nature' : 'mountains travel'}"
+          <img class="lazy blur"
+               src="${lowSrc}"
+               data-src="${highSrc}"
+               alt="${tags}"
+               loading="lazy"
           />
         `;
         gallery.appendChild(div);
       }
 
-      // Lazy loading logic
+      // Lazy loading
       const lazyImages = document.querySelectorAll("img.lazy");
-      if ("IntersectionObserver" in window) {
-        const observer = new IntersectionObserver((entries, observer) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              const img = entry.target;
-              const highResSrc = img.getAttribute("data-src");
-              if (highResSrc) {
-                const temp = new Image();
-                temp.src = highResSrc;
-                temp.onload = () => {
-                  img.src = highResSrc;
-                  img.classList.add("loaded");
-                  img.removeAttribute("data-src");
-                  observer.unobserve(img);
-                };
-              }
-            }
-          });
-        }, { rootMargin: "200px" });
+      const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const img = entry.target;
+            const highSrc = img.getAttribute("data-src");
+            const temp = new Image();
+            temp.src = highSrc;
+            temp.onload = () => {
+              img.src = highSrc;
+              img.classList.add("loaded");
+              img.removeAttribute("data-src");
+              observer.unobserve(img);
+            };
+          }
+        });
+      }, { rootMargin: "200px" });
 
-        lazyImages.forEach(img => observer.observe(img));
-      }
+      lazyImages.forEach(img => observer.observe(img));
 
-      // Filtering
+      // Search and filtering
       const searchInput = document.getElementById("search-bar");
-      const checkboxContainer = document.getElementById("tags");
-      const checkboxes = checkboxContainer.querySelectorAll('input[type="checkbox"]');
+      const tagsBox = document.getElementById("tags");
+      const checkboxes = tagsBox.querySelectorAll("input[type='checkbox']");
 
       function filterImages() {
-        const searchValue = searchInput.value.trim().toLowerCase();
+        const query = searchInput.value.toLowerCase().trim();
         const selectedTags = Array.from(checkboxes)
           .filter(cb => cb.checked)
           .map(cb => cb.value.toLowerCase());
 
         document.querySelectorAll(".grid-item img").forEach(img => {
           const altTags = img.alt.toLowerCase().split(" ");
-          const searchMatch = searchValue === "" || altTags.includes(searchValue);
-          const tagMatch = selectedTags.length === 0 || selectedTags.every(tag => altTags.includes(tag));
-          img.closest('.grid-item').style.display = (searchMatch && tagMatch) ? "" : "none";
+          const matchesQuery = query === "" || altTags.includes(query);
+          const matchesTags = selectedTags.length === 0 || selectedTags.every(tag => altTags.includes(tag));
+          img.closest(".grid-item").style.display = (matchesQuery && matchesTags) ? "" : "none";
         });
       }
 
-      searchInput.addEventListener("input", filterImages);
-      checkboxes.forEach(cb => cb.addEventListener("change", filterImages));
-
-      // Checkboxes show/hide
       searchInput.addEventListener("focus", () => {
-        checkboxContainer.style.display = "flex";
+        tagsBox.style.display = "flex";
       });
 
       searchInput.addEventListener("blur", () => {
         setTimeout(() => {
           if (!document.activeElement.closest("#tags")) {
-            checkboxContainer.style.display = "none";
+            tagsBox.style.display = "none";
           }
         }, 100);
       });
 
-      // Theme toggle
+      searchInput.addEventListener("input", filterImages);
+      checkboxes.forEach(cb => cb.addEventListener("change", filterImages));
+
+      // Theme Toggle
       const toggle = document.getElementById("theme-switch");
-      const body = document.body;
       if (localStorage.getItem("theme") === "dark") {
-        body.classList.add("dark-mode");
+        document.body.classList.add("dark-mode");
         toggle.checked = true;
       }
+
       toggle.addEventListener("change", () => {
-        body.classList.toggle("dark-mode");
-        localStorage.setItem("theme", body.classList.contains("dark-mode") ? "dark" : "light");
+        document.body.classList.toggle("dark-mode");
+        localStorage.setItem("theme", toggle.checked ? "dark" : "light");
       });
     });
   </script>
