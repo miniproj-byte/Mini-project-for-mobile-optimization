@@ -39,7 +39,6 @@
   <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
   <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
 
-  <!-- Lazy Load Logic -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const gallery = document.getElementById('gallery');
@@ -62,7 +61,6 @@
 
       // Lazy load
       const lazyImages = [].slice.call(document.querySelectorAll("img.lazy"));
-
       if ("IntersectionObserver" in window) {
         const lazyObserver = new IntersectionObserver((entries, observer) => {
           entries.forEach(entry => {
@@ -85,16 +83,17 @@
         });
       }
 
-      // Initialize Masonry after DOM images are added
+      // Initialize Masonry layout
       imagesLoaded(gallery, () => {
         window.msnry = new Masonry(gallery, {
           itemSelector: '.grid-item',
           gutter: 20,
           percentPosition: true
+          // columnWidth removed — let Masonry auto-calculate
         });
       });
 
-      // Theme toggle setup
+      // Theme toggle
       const toggle = document.getElementById("toggle-theme");
       const body = document.body;
       if (localStorage.getItem("theme") === "dark") {

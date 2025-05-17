@@ -1,7 +1,6 @@
 const searchInput = document.getElementById('search-bar');
 const checkboxContainer = document.getElementById('tags');
 const checkboxes = checkboxContainer.querySelectorAll('input[type="checkbox"]');
-const images = document.querySelectorAll('img.lazy');
 
 function filterImages() {
   const searchValue = searchInput.value.trim().toLowerCase();
@@ -9,6 +8,7 @@ function filterImages() {
     .filter(cb => cb.checked)
     .map(cb => cb.value.toLowerCase());
 
+  const images = document.querySelectorAll('img.lazy');
   images.forEach(img => {
     const alt = img.alt.toLowerCase();
     const searchMatch = alt.includes(searchValue);
@@ -21,3 +21,14 @@ function filterImages() {
 
 searchInput.addEventListener('input', filterImages);
 checkboxes.forEach(cb => cb.addEventListener('change', filterImages));
+
+// Tag visibility on search bar focus
+searchInput.addEventListener('focus', () => {
+  checkboxContainer.classList.add('visible');
+});
+
+document.addEventListener('click', (e) => {
+  if (!searchInput.contains(e.target) && !checkboxContainer.contains(e.target)) {
+    checkboxContainer.classList.remove('visible');
+  }
+});

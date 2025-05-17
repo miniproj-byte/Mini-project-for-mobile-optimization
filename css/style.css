@@ -9,8 +9,74 @@ body {
 }
 
 body.dark-mode {
+  background-color: #1e1e1e;
+  color: #eee;
+}
+
+body.dark-mode #search-bar {
   background: #1e1e1e;
   color: #eee;
+  border: 1px solid #444;
+}
+
+body.dark-mode .gallery img {
+  box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode #tags label {
+  color: #ccc;
+}
+
+body.dark-mode .slider {
+  background-color: #555;
+}
+
+body.dark-mode input:checked + .slider {
+  background-color: #4caf50;
+}
+
+#search-bar {
+  width: 60%;
+  height: 36px;
+  padding: 0 12px;
+  font-size: 1rem;
+  border-radius: 8px;
+  background: #fff;
+  color: #000;
+  border: 1px solid #ccc;
+}
+
+#search-bar::placeholder {
+  color: #888;
+}
+
+#tags {
+  margin-top: 1rem;
+  display: none;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+#tags.visible {
+  display: flex;
+  opacity: 1;
+}
+
+#tags label {
+  color: inherit;
+  cursor: pointer;
+}
+
+#tags input {
+  margin-right: 0.3rem;
+}
+
+.logo-container {
+  text-align: center;
+  margin-top: 20px;
 }
 
 #theme-toggle {
@@ -26,25 +92,19 @@ body.dark-mode {
   width: 60px;
   height: 34px;
 }
-
 .switch input {
   opacity: 0;
   width: 0;
   height: 0;
 }
-
 .slider {
   position: absolute;
   cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  top: 0; left: 0; right: 0; bottom: 0;
   background-color: #ccc;
   border-radius: 34px;
   transition: background-color 0.4s ease;
 }
-
 .slider:before {
   position: absolute;
   content: "";
@@ -56,13 +116,16 @@ body.dark-mode {
   border-radius: 50%;
   transition: transform 0.4s ease;
 }
-
 input:checked + .slider {
   background-color: #4caf50;
 }
-
 input:checked + .slider:before {
   transform: translateX(26px);
+}
+
+.controls {
+  text-align: center;
+  margin: 20px auto;
 }
 
 .gallery {
@@ -71,16 +134,13 @@ input:checked + .slider:before {
 }
 
 .grid-item {
-  width: 48%;
   margin-bottom: 20px;
-  display: inline-block;
-  vertical-align: top;
 }
 
 .grid-item img {
   width: 100%;
   border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
   filter: blur(5px) brightness(0.9);
   transition: filter 0.4s ease, transform 0.3s ease;
 }
