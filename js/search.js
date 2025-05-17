@@ -1,7 +1,10 @@
 const searchInput = document.getElementById('search-bar');
 const checkboxContainer = document.getElementById('tags');
 const checkboxes = checkboxContainer.querySelectorAll('input[type="checkbox"]');
-const images = document.querySelectorAll('img.lazy');
+const images = document.querySelectorAll('img');
+
+// Hide tags initially
+checkboxContainer.style.display = 'none';
 
 function filterImages() {
   const searchValue = searchInput.value.trim().toLowerCase();
@@ -21,3 +24,15 @@ function filterImages() {
 
 searchInput.addEventListener('input', filterImages);
 checkboxes.forEach(cb => cb.addEventListener('change', filterImages));
+
+// Show tags on focus
+searchInput.addEventListener('focus', () => {
+  checkboxContainer.style.display = 'flex';
+});
+
+// Hide tags on blur with slight delay so clicks register
+searchInput.addEventListener('blur', () => {
+  setTimeout(() => {
+    checkboxContainer.style.display = 'none';
+  }, 150);
+});
