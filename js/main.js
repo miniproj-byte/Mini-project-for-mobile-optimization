@@ -1,159 +1,132 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const gallery = document.getElementById("gallery");
-  const searchInput = document.getElementById("search-bar");
-  const checkboxContainer = document.getElementById("tags");
-  const checkboxes = checkboxContainer.querySelectorAll('input[type="checkbox"]');
-  const popup = document.getElementById("popup");
-  const popupImg = document.getElementById("popup-img");
-  const spinner = document.getElementById("spinner");
-  const closePopupBtn = document.getElementById("close-popup");
-  const body = document.body;
-
-  // Image data with tags & sources
-  const imagesData = Array.from({ length: 32 }, (_, i) => {
-    const num = String(i + 1).padStart(2, "0");
-    const tagsPool = [
-      ["beach", "travel"],
-      ["nature", "mountains"],
-      ["beach", "nature"],
-      ["travel", "mountains"],
-    ];
-    const tags = tagsPool[i % tagsPool.length];
+  const imageData = [...Array(32)].map((_, i) => {
+    const num = (i + 1).toString().padStart(2, "0");
     return {
-      id: num,
-      alt: `${tags.join(" ")} image ${num}`,
-      tags,
-      lowRes: `assets/images/low-res/img${num}-low.webp`,
-      highRes: `assets/images/high-res/img${num}-high.webp`,
+      title: `Image ${num}`,
+      lowRes: `assets/images/low/image${num}.webp`,
+      highRes: `assets/images/high/image${num}.webp`,
+      tags: i % 2 === 0 ? ["beach", "nature"] : ["mountains", "travel"]
     };
   });
 
-  // Render gallery with images
-  function renderGallery(images) {
-    gallery.innerHTML = "";
-    images.forEach(({ alt, lowRes, highRes }) => {
-      const div = document.createElement("div");
-      div.className = "grid-item";
-      div.innerHTML = `<img class="lazy" src="${lowRes}" data-src="${highRes}" alt="${alt}">`;
-      gallery.appendChild(div);
-    });
+  const gallery = document.getElementById("gallery");
 
-    // Wait till images are loaded before Masonry layout init
-    imagesLoaded(gallery, () => {
-      window.msnry = new Masonry(gallery, {
-        itemSelector: ".grid-item",
-        columnWidth: ".grid-item",
-        gutter: 20,
-        percentPosition: true,
-      });
-    });
-
-    initLazyLoad();
-  }
-
-  // Intersection Observer for lazy loading
-  function initLazyLoad() {
-    const lazyImages = document.querySelectorAll(".lazy");
-    const observer = new IntersectionObserver((entries, obs) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const img = entry.target;
-          const highResSrc = img.dataset.src;
-          if (highResSrc) {
-            img.src = highResSrc;
-            img.onload = () => img.classList.add("loaded");
-            obs.unobserve(img);
-          }
-        }
-      });
-    }, {
-      rootMargin: "100px 0px",
-      threshold: 0.1,
-    });
-    lazyImages.forEach(img => observer.observe(img));
-  }
-
-  // Filtering by search & tags
-  function filterImages() {
-    const searchTerm = searchInput.value.toLowerCase().trim();
-    const activeTags = Array.from(checkboxes)
-      .filter(cb => cb.checked)
-      .map(cb => cb.value.toLowerCase());
-
-    const filtered = imagesData.filter(({ tags }) => {
-      if (activeTags.length && !activeTags.every(tag => tags.includes(tag))) return false;
-      if (searchTerm) return tags.some(tag => tag.includes(searchTerm));
-      return true;
-    });
-
-    renderGallery(filtered);
-  }
-
-  // Show/hide tags on focus/blur of search
-  searchInput.addEventListener("focus", () => {
-    checkboxContainer.style.display = "flex";
+  imageData.forEach(data => {
+    const div = document.createElement("div");
+    div.className = "grid-item";
+    div.innerHTML = `
+      <img 
+        src="${data.lowRes}" 
+        data-src="${data.highRes}" 
+        alt="${data.tags.join(" ")}" 
+        data-highres="${data.highRes}" 
+        class="lazy blur" />
+    `;
+    gallery.appendChild(div);
   });
+
+  // Masonry init
+  const msnry = new Masonry(gallery, { itemSelector: ".grid-item", gutter: 10 });
+  window.msnry = msnry;
+
+  imagesLoaded(gallery, () => {
+    msnry.layout();
+  });
+
+  // Lazy load
+  const lazyImages = document.querySelectorAll("img.lazy");
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const img = entry.target;
+        const highRes = img.dataset.src;
+        const temp = new Image();
+        temp.src = highRes;
+        temp.onload = () => {
+          img.src = highRes;
+          img.classList.add("loaded");
+          img.classList.remove("blur");
+          img.removeAttribute("data-src");
+          observer.unobserve(img);
+          msnry.layout();
+        };
+      }
+    });
+  });
+
+  lazyImages.forEach(img => observer.observe(img));
+
+  // Search + tag filter
+  const searchInput = document.getElementById("search-bar");
+  const checkboxContainer = document.getElementById("tags");
+  const checkboxes = checkboxContainer.querySelectorAll('input[type="checkbox"]');
+
+  function filterImages() {
+    const query = searchInput.value.toLowerCase().trim();
+    const selectedTags = [...checkboxes].filter(cb => cb.checked).map(cb => cb.value.toLowerCase());
+
+    document.querySelectorAll("#gallery .grid-item").forEach(item => {
+      const img = item.querySelector("img");
+      const alt = img.alt.toLowerCase();
+      const searchMatch = query === "" || alt.includes(query);
+      const tagMatch = selectedTags.length === 0 || selectedTags.some(tag => alt.includes(tag));
+      item.style.display = searchMatch && tagMatch ? "" : "none";
+    });
+
+    msnry.layout();
+  }
+
+  searchInput.addEventListener("focus", () => {
+    checkboxContainer.style.display = "block";
+  });
+
   searchInput.addEventListener("blur", () => {
     setTimeout(() => {
-      if (!document.activeElement.matches('input[type="checkbox"]')) {
+      if (!checkboxContainer.contains(document.activeElement)) {
         checkboxContainer.style.display = "none";
       }
-    }, 150);
+    }, 200);
   });
 
-  // Event listeners
-  checkboxes.forEach(cb => cb.addEventListener("change", filterImages));
   searchInput.addEventListener("input", filterImages);
+  checkboxes.forEach(cb => cb.addEventListener("change", filterImages));
 
-  // Theme toggle with localStorage
+  // Theme toggle
   const themeSwitch = document.getElementById("theme-switch");
-  const savedTheme = localStorage.getItem("optipix-theme");
-  if (savedTheme === "dark") {
-    body.classList.add("dark-mode");
-    themeSwitch.checked = true;
-  }
   themeSwitch.addEventListener("change", () => {
-    if (themeSwitch.checked) {
-      body.classList.add("dark-mode");
-      localStorage.setItem("optipix-theme", "dark");
-    } else {
-      body.classList.remove("dark-mode");
-      localStorage.setItem("optipix-theme", "light");
-    }
+    document.body.classList.toggle("dark", themeSwitch.checked);
   });
 
-  // Popup open with spinner until full res loads
-  gallery.addEventListener("click", e => {
-    const img = e.target.closest("img");
+  // Popup viewer
+  const popup = document.getElementById("popup");
+  const popupImg = document.getElementById("popup-img");
+  const spinner = document.getElementById("spinner");
+  const closePopup = document.getElementById("close-popup");
+
+  gallery.addEventListener("click", (e) => {
+    const img = e.target.closest("img[data-highres]");
     if (!img) return;
 
     popup.classList.remove("hidden");
     spinner.style.display = "block";
     popupImg.style.display = "none";
-
-    popupImg.src = img.dataset.src;
-    popupImg.alt = img.alt;
-  });
-
-  popupImg.addEventListener("load", () => {
-    spinner.style.display = "none";
-    popupImg.style.display = "block";
-  });
-
-  // Close popup logic
-  closePopupBtn.addEventListener("click", () => {
-    popup.classList.add("hidden");
     popupImg.src = "";
+
+    const highRes = img.dataset.highres;
+    const temp = new Image();
+    temp.src = highRes;
+    temp.onload = () => {
+      popupImg.src = highRes;
+      spinner.style.display = "none";
+      popupImg.style.display = "block";
+    };
   });
 
-  // Also close popup when clicking outside the image
-  popup.addEventListener("click", e => {
-    if (e.target === popup) {
-      popup.classList.add("hidden");
-      popupImg.src = "";
-    }
+  closePopup.addEventListener("click", () => {
+    popup.classList.add("hidden");
   });
 
-  // Initial render
-  renderGallery(imagesData);
+  popup.addEventListener("click", (e) => {
+    if (e.target === popup) popup.classList.add("hidden");
+  });
 });
