@@ -1,128 +1,89 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const galleryContainer = document.getElementById('gallery');
-  const totalImages = 32;
+  const gallery = document.getElementById("gallery");
 
-  // Generate gallery images dynamically
-  const altTags = ['beach', 'travel', 'nature', 'mountains'];
-  galleryContainer.innerHTML = [...Array(totalImages)].map((_, i) => {
-    const imgNum = (i + 1).toString().padStart(2, '0');
-    const alt = altTags[i % altTags.length] + ' image ' + imgNum;
-    return `
-      <div class="grid-item">
-        <img
-          class="lazy"
-          src="assets/images/low-res/img${imgNum}-low.webp"
-          data-src="assets/images/high-res/img${imgNum}-high.webp"
-          alt="${alt}"
-          loading="lazy"
-        />
-      </div>
+  for (let i = 1; i <= 32; i++) {
+    const imgNum = i.toString().padStart(2, '0');
+    const lowSrc = `assets/images/low/image${imgNum}.webp`;
+    const highSrc = `assets/images/high/image${imgNum}.webp`;
+    const tags = i % 2 === 0 ? "beach nature" : "mountains travel";
+
+    const div = document.createElement("div");
+    div.className = "grid-item";
+    div.innerHTML = `
+      <img class="lazy blur"
+           src="${lowSrc}"
+           data-src="${highSrc}"
+           alt="${tags}"
+           loading="lazy"
+      />
     `;
-  }).join('');
+    gallery.appendChild(div);
+  }
 
-  // Initialize Masonry after images loaded
-  imagesLoaded(galleryContainer, () => {
-    window.msnry = new Masonry(galleryContainer, {
-      itemSelector: '.grid-item',
-      columnWidth: '.grid-item',
-      gutter: 20,
-      percentPosition: true,
-    });
-    console.log("Masonry initialized");
-  });
-
-  // Lazy loading with debug logs
+  // Lazy loading
   const lazyImages = document.querySelectorAll("img.lazy");
-  if ("IntersectionObserver" in window) {
-    const observer = new IntersectionObserver((entries, observer) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const img = entry.target;
-          const highResSrc = img.getAttribute("data-src");
-          if (highResSrc) {
-            console.log(`Loading high-res image: ${highResSrc}`);
-            const temp = new Image();
-            temp.src = highResSrc;
-            temp.onload = () => {
-              img.src = highResSrc;
-              img.classList.add("loaded");
-              img.removeAttribute("data-src");
-              observer.unobserve(img);
-              if (window.msnry) {
-                window.msnry.layout();
-                console.log("Masonry layout updated after image load");
-              }
-            };
-            temp.onerror = () => {
-              console.error(`Failed to load image: ${highResSrc}`);
-            };
-          }
-        }
-      });
-    });
-
-    lazyImages.forEach(img => observer.observe(img));
-  } else {
-    // fallback
-    lazyImages.forEach(img => {
-      const highResSrc = img.getAttribute("data-src");
-      if (highResSrc) {
-        img.src = highResSrc;
-        img.classList.add("loaded");
-        img.removeAttribute("data-src");
+  const observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const img = entry.target;
+        const highSrc = img.getAttribute("data-src");
+        const temp = new Image();
+        temp.src = highSrc;
+        temp.onload = () => {
+          img.src = highSrc;
+          img.classList.add("loaded");
+          img.removeAttribute("data-src");
+          observer.unobserve(img);
+        };
       }
+    });
+  }, { rootMargin: "200px" });
+
+  lazyImages.forEach(img => observer.observe(img));
+
+  // Search and filtering
+  const searchInput = document.getElementById("search-bar");
+  const tagsBox = document.getElementById("tags");
+  const checkboxes = tagsBox.querySelectorAll("input[type='checkbox']");
+
+  function filterImages() {
+    const query = searchInput.value.toLowerCase().trim();
+    const selectedTags = Array.from(checkboxes)
+      .filter(cb => cb.checked)
+      .map(cb => cb.value.toLowerCase());
+
+    document.querySelectorAll(".grid-item img").forEach(img => {
+      const altTags = img.alt.toLowerCase().split(" ");
+      const matchesQuery = query === "" || altTags.includes(query);
+      const matchesTags = selectedTags.length === 0 || selectedTags.every(tag => altTags.includes(tag));
+      img.closest(".grid-item").style.display = (matchesQuery && matchesTags) ? "" : "none";
     });
   }
 
-  // Search and filter
-  const searchInput = document.getElementById('search-bar');
-  const checkboxContainer = document.getElementById('tags');
-  const checkboxes = checkboxContainer.querySelectorAll('input[type="checkbox"]');
-  const images = document.querySelectorAll('.grid-item img');
-
-function filterImages() {
-  const searchValue = searchInput.value.trim().toLowerCase();
-  const selectedTags = Array.from(checkboxes)
-    .filter(cb => cb.checked)
-    .map(cb => cb.value.toLowerCase());
-
-  images.forEach(img => {
-    const alt = img.alt.toLowerCase();
-
-    const matchesSearch = alt.includes(searchValue);
-    const matchesTags = selectedTags.length === 0 ? true : selectedTags.every(tag => alt.includes(tag));
-
-    // Show only if matches search AND matches all selected tags
-    img.closest('.grid-item').style.display = (matchesSearch && matchesTags) ? '' : 'none';
+  searchInput.addEventListener("focus", () => {
+    tagsBox.style.display = "flex";
   });
 
-  if (window.msnry) window.msnry.layout();
-}
-
-  searchInput.addEventListener('input', filterImages);
-  checkboxes.forEach(cb => cb.addEventListener('change', filterImages));
-
-  // Show/hide tags on focus/blur with delay
-  searchInput.addEventListener('focus', () => {
-    checkboxContainer.style.display = 'flex';
-  });
-  searchInput.addEventListener('blur', () => {
+  searchInput.addEventListener("blur", () => {
     setTimeout(() => {
-      if (document.activeElement.parentElement.parentElement !== checkboxContainer) {
-        checkboxContainer.style.display = 'none';
+      if (!document.activeElement.closest("#tags")) {
+        tagsBox.style.display = "none";
       }
-    }, 200);
+    }, 100);
   });
 
-  // Theme toggle (light/dark)
+  searchInput.addEventListener("input", filterImages);
+  checkboxes.forEach(cb => cb.addEventListener("change", filterImages));
+
+  // Theme Toggle
   const toggle = document.getElementById("theme-switch");
-  const body = document.body;
   if (localStorage.getItem("theme") === "dark") {
-    body.classList.add("dark-mode");
+    document.body.classList.add("dark-mode");
     toggle.checked = true;
   }
+
   toggle.addEventListener("change", () => {
-    body.classList.toggle("dark-mode");
-    localStorage.setItem("theme", body.classList.contains("dark-mode") ? "dark" : "light");
+    document.body.classList.toggle("dark-mode");
+    localStorage.setItem("theme", toggle.checked ? "dark" : "light");
   });
 });
