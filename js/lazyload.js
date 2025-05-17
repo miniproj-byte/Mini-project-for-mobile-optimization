@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
   const lazyImages = document.querySelectorAll("img.lazy");
 
   if ("IntersectionObserver" in window) {
@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     lazyImages.forEach(img => observer.observe(img));
   } else {
-    // Fallback for old browsers
+    // fallback if no IntersectionObserver support
     lazyImages.forEach(img => {
       const highResSrc = img.getAttribute("data-src");
       if (highResSrc) {
