@@ -4,9 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Optipix Gallery</title>
-  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
+
+  <!-- Logo -->
+  <div class="logo-container">
+    <img src="https://i.postimg.cc/1tXr2cLc/1000193832-removebg-preview.png" alt="Optipix Logo" />
+  </div>
+
+  <!-- Theme Toggle -->
   <div id="theme-toggle">
     <label class="switch">
       <input type="checkbox" id="toggle-theme" />
@@ -14,19 +21,73 @@
     </label>
   </div>
 
-  <h1>Optipix Gallery</h1>
+  <!-- Search and Tags -->
+  <div class="controls">
+    <input id="search-bar" type="search" placeholder="Search here..." />
+    <div id="tags">
+      <label><input type="checkbox" value="beach" /> Beach</label>
+      <label><input type="checkbox" value="travel" /> Travel</label>
+      <label><input type="checkbox" value="nature" /> Nature</label>
+      <label><input type="checkbox" value="mountains" /> Mountains</label>
+    </div>
+  </div>
 
-  <input
-    type="search"
-    id="search-bar"
-    placeholder="Search images by tags..."
-    autocomplete="off"
-  />
+  <!-- Gallery Container -->
+  <div class="gallery" id="gallery"></div>
 
-  <div id="tags" style="display:none;"></div>
+  <!-- Scripts -->
+  <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+  <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+  
+  <!-- Your custom scripts -->
+  <script src="js/lazyload.js"></script>
+  <script src="js/search.js"></script>
 
-  <main class="gallery" id="gallery"></main>
+  <!-- Dynamic Gallery Generation -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Generate 32 images dynamically
+      const gallery = document.getElementById('gallery');
+      let html = '';
+      for (let i = 1; i <= 32; i++) {
+        const num = i.toString().padStart(2, '0');
+        html += `
+          <div class="grid-item">
+            <img
+              class="lazy"
+              src="assets/images/low-res/img${num}-low.webp"
+              data-src="assets/images/high-res/img${num}-high.webp"
+              alt="Image ${num} nature travel"
+              loading="lazy"
+            />
+          </div>
+        `;
+      }
+      gallery.innerHTML = html;
 
-  <script src="js/main.js"></script>
+      // Masonry layout init after images load
+      imagesLoaded(gallery, () => {
+        window.msnry = new Masonry(gallery, {
+          itemSelector: '.grid-item',
+          columnWidth: '.grid-item',
+          gutter: 20,
+          percentPosition: true
+        });
+      });
+
+      // Theme toggle setup
+      const toggle = document.getElementById("theme-switch");
+      const body = document.body;
+      if (localStorage.getItem("theme") === "dark") {
+        body.classList.add("dark-mode");
+        toggle.checked = true;
+      }
+      toggle.addEventListener("change", () => {
+        body.classList.toggle("dark-mode");
+        localStorage.setItem("theme", body.classList.contains("dark-mode") ? "dark" : "light");
+      });
+    });
+  </script>
+
 </body>
 </html>
