@@ -1,89 +1,23 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const gallery = document.getElementById("gallery");
+const searchInput = document.getElementById('search-bar');
+const checkboxContainer = document.getElementById('tags');
+const checkboxes = checkboxContainer.querySelectorAll('input[type="checkbox"]');
+const images = document.querySelectorAll('img.lazy');
 
-  for (let i = 1; i <= 32; i++) {
-    const imgNum = i.toString().padStart(2, '0');
-    const lowSrc = `assets/images/low/image${imgNum}.webp`;
-    const highSrc = `assets/images/high/image${imgNum}.webp`;
-    const tags = i % 2 === 0 ? "beach nature" : "mountains travel";
+function filterImages() {
+  const searchValue = searchInput.value.trim().toLowerCase();
+  const selectedTags = Array.from(checkboxes)
+    .filter(cb => cb.checked)
+    .map(cb => cb.value.toLowerCase());
 
-    const div = document.createElement("div");
-    div.className = "grid-item";
-    div.innerHTML = `
-      <img class="lazy blur"
-           src="${lowSrc}"
-           data-src="${highSrc}"
-           alt="${tags}"
-           loading="lazy"
-      />
-    `;
-    gallery.appendChild(div);
-  }
-
-  // Lazy loading
-  const lazyImages = document.querySelectorAll("img.lazy");
-  const observer = new IntersectionObserver((entries, observer) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const img = entry.target;
-        const highSrc = img.getAttribute("data-src");
-        const temp = new Image();
-        temp.src = highSrc;
-        temp.onload = () => {
-          img.src = highSrc;
-          img.classList.add("loaded");
-          img.removeAttribute("data-src");
-          observer.unobserve(img);
-        };
-      }
-    });
-  }, { rootMargin: "200px" });
-
-  lazyImages.forEach(img => observer.observe(img));
-
-  // Search and filtering
-  const searchInput = document.getElementById("search-bar");
-  const tagsBox = document.getElementById("tags");
-  const checkboxes = tagsBox.querySelectorAll("input[type='checkbox']");
-
-  function filterImages() {
-    const query = searchInput.value.toLowerCase().trim();
-    const selectedTags = Array.from(checkboxes)
-      .filter(cb => cb.checked)
-      .map(cb => cb.value.toLowerCase());
-
-    document.querySelectorAll(".grid-item img").forEach(img => {
-      const altTags = img.alt.toLowerCase().split(" ");
-      const matchesQuery = query === "" || altTags.includes(query);
-      const matchesTags = selectedTags.length === 0 || selectedTags.every(tag => altTags.includes(tag));
-      img.closest(".grid-item").style.display = (matchesQuery && matchesTags) ? "" : "none";
-    });
-  }
-
-  searchInput.addEventListener("focus", () => {
-    tagsBox.style.display = "flex";
+  images.forEach(img => {
+    const alt = img.alt.toLowerCase();
+    const searchMatch = alt.includes(searchValue);
+    const tagMatch = selectedTags.length === 0 || selectedTags.some(tag => alt.includes(tag));
+    img.closest('.grid-item').style.display = (searchMatch && tagMatch) ? '' : 'none';
   });
 
-  searchInput.addEventListener("blur", () => {
-    setTimeout(() => {
-      if (!document.activeElement.closest("#tags")) {
-        tagsBox.style.display = "none";
-      }
-    }, 100);
-  });
+  if (window.msnry) window.msnry.layout();
+}
 
-  searchInput.addEventListener("input", filterImages);
-  checkboxes.forEach(cb => cb.addEventListener("change", filterImages));
-
-  // Theme Toggle
-  const toggle = document.getElementById("theme-switch");
-  if (localStorage.getItem("theme") === "dark") {
-    document.body.classList.add("dark-mode");
-    toggle.checked = true;
-  }
-
-  toggle.addEventListener("change", () => {
-    document.body.classList.toggle("dark-mode");
-    localStorage.setItem("theme", toggle.checked ? "dark" : "light");
-  });
-});
+searchInput.addEventListener('input', filterImages);
+checkboxes.forEach(cb => cb.addEventListener('change', filterImages));

@@ -2,11 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Optipix Gallery</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
+
   <!-- Logo -->
   <div class="logo-container">
     <img src="https://i.postimg.cc/1tXr2cLc/1000193832-removebg-preview.png" alt="Optipix Logo" />
@@ -15,8 +16,8 @@
   <!-- Theme Toggle -->
   <div id="theme-toggle">
     <label class="switch">
-      <input type="checkbox" id="theme-switch" />
-      <span class="slider round"></span>
+      <input type="checkbox" id="toggle-theme" />
+      <span class="slider"></span>
     </label>
   </div>
 
@@ -31,10 +32,62 @@
     </div>
   </div>
 
-  <!-- Gallery -->
+  <!-- Gallery Container -->
   <div class="gallery" id="gallery"></div>
 
-  <!-- Main Script -->
-  <script src="js/main.js"></script>
+  <!-- Scripts -->
+  <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+  <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+  
+  <!-- Your custom scripts -->
+  <script src="js/lazyload.js"></script>
+  <script src="js/search.js"></script>
+
+  <!-- Dynamic Gallery Generation -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Generate 32 images dynamically
+      const gallery = document.getElementById('gallery');
+      let html = '';
+      for (let i = 1; i <= 32; i++) {
+        const num = i.toString().padStart(2, '0');
+        html += `
+          <div class="grid-item">
+            <img
+              class="lazy"
+              src="assets/images/low-res/img${num}-low.webp"
+              data-src="assets/images/high-res/img${num}-high.webp"
+              alt="Image ${num} nature travel"
+              loading="lazy"
+            />
+          </div>
+        `;
+      }
+      gallery.innerHTML = html;
+
+      // Masonry layout init after images load
+      imagesLoaded(gallery, () => {
+        window.msnry = new Masonry(gallery, {
+          itemSelector: '.grid-item',
+          columnWidth: '.grid-item',
+          gutter: 20,
+          percentPosition: true
+        });
+      });
+
+      // Theme toggle setup
+      const toggle = document.getElementById("theme-switch");
+      const body = document.body;
+      if (localStorage.getItem("theme") === "dark") {
+        body.classList.add("dark-mode");
+        toggle.checked = true;
+      }
+      toggle.addEventListener("change", () => {
+        body.classList.toggle("dark-mode");
+        localStorage.setItem("theme", body.classList.contains("dark-mode") ? "dark" : "light");
+      });
+    });
+  </script>
+
 </body>
 </html>
