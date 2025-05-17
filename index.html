@@ -38,15 +38,10 @@
   <!-- Scripts -->
   <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
   <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
-  
-  <!-- Your custom scripts -->
-  <script src="js/lazyload.js"></script>
-  <script src="js/search.js"></script>
 
-  <!-- Dynamic Gallery Generation -->
+  <!-- Lazy Load Logic -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      // Generate 32 images dynamically
       const gallery = document.getElementById('gallery');
       let html = '';
       for (let i = 1; i <= 32; i++) {
@@ -65,18 +60,42 @@
       }
       gallery.innerHTML = html;
 
-      // Masonry layout init after images load
+      // Lazy load
+      const lazyImages = [].slice.call(document.querySelectorAll("img.lazy"));
+
+      if ("IntersectionObserver" in window) {
+        const lazyObserver = new IntersectionObserver((entries, observer) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const img = entry.target;
+              img.src = img.dataset.src;
+              img.addEventListener('load', () => {
+                img.classList.add("loaded");
+                if (window.msnry) window.msnry.layout();
+              });
+              lazyObserver.unobserve(img);
+            }
+          });
+        });
+        lazyImages.forEach(img => lazyObserver.observe(img));
+      } else {
+        lazyImages.forEach(img => {
+          img.src = img.dataset.src;
+          img.classList.add("loaded");
+        });
+      }
+
+      // Initialize Masonry after DOM images are added
       imagesLoaded(gallery, () => {
         window.msnry = new Masonry(gallery, {
           itemSelector: '.grid-item',
-          columnWidth: '.grid-item',
           gutter: 20,
           percentPosition: true
         });
       });
 
       // Theme toggle setup
-      const toggle = document.getElementById("theme-switch");
+      const toggle = document.getElementById("toggle-theme");
       const body = document.body;
       if (localStorage.getItem("theme") === "dark") {
         body.classList.add("dark-mode");
@@ -89,5 +108,7 @@
     });
   </script>
 
+  <!-- Filtering Script -->
+  <script src="js/main.js"></script>
 </body>
 </html>
