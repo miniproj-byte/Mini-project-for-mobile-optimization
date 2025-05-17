@@ -49,6 +49,8 @@ body.dark header {
   border: 1px solid #ccc;
   padding: 0.5rem;
   z-index: 10;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 body.dark .tag-checkboxes {
@@ -65,6 +67,8 @@ body.dark .tag-checkboxes {
   column-count: 2;
   column-gap: 1rem;
   padding: 1rem;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
 .grid-item {
@@ -74,15 +78,13 @@ body.dark .tag-checkboxes {
 
 .grid-item img {
   width: 100%;
+  max-width: 100%;
   display: block;
-  transition: filter 0.3s;
-}
-
-img.blur {
-  filter: blur(8px);
+  transition: filter 0.3s ease;
+  border-radius: 8px;
+  filter: blur(5px) brightness(0.95);
 }
 
 img.loaded {
   filter: none;
 }
-

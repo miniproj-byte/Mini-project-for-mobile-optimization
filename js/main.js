@@ -19,11 +19,24 @@ document.addEventListener("DOMContentLoaded", () => {
         src="${data.lowRes}" 
         data-src="${data.highRes}" 
         alt="${data.tags.join(" ")}" 
-        class="lazy blur" />
+        class="lazy blur" 
+        loading="lazy"
+      />
     `;
     gallery.appendChild(div);
   });
 
+  // Reflow Masonry after images are loaded
+  imagesLoaded(gallery, () => {
+    window.msnry = new Masonry(gallery, {
+      itemSelector: ".grid-item",
+      columnWidth: ".grid-item",
+      gutter: 20,
+      percentPosition: true
+    });
+  });
+
+  // Lazy loading with IntersectionObserver
   const lazyImages = document.querySelectorAll("img.lazy");
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
@@ -37,6 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
           img.classList.add("loaded");
           img.classList.remove("blur");
           observer.unobserve(img);
+          if (window.msnry) window.msnry.layout();
         };
       }
     });
@@ -44,32 +58,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
   lazyImages.forEach(img => observer.observe(img));
 
+  // Filter functionality
   const searchInput = document.getElementById("search-bar");
   const checkboxContainer = document.getElementById("tags");
   const checkboxes = checkboxContainer.querySelectorAll('input[type="checkbox"]');
 
-function filterImages() {
-  const searchValue = searchInput.value.trim().toLowerCase();
-  const selectedTags = Array.from(checkboxes)
-    .filter(cb => cb.checked)
-    .map(cb => cb.value.toLowerCase());
+  function filterImages() {
+    const searchTerm = searchInput.value.toLowerCase().trim();
+    const selectedTags = [...checkboxes]
+      .filter(cb => cb.checked)
+      .map(cb => cb.value.toLowerCase());
 
-  images.forEach(img => {
-    const alt = img.alt.toLowerCase();
+    document.querySelectorAll(".grid-item").forEach(item => {
+      const alt = item.querySelector("img").alt.toLowerCase();
+      const matchesSearch = alt.includes(searchTerm);
+      const matchesTags = selectedTags.length === 0 || selectedTags.every(tag => alt.includes(tag));
+      item.style.display = matchesSearch && matchesTags ? "" : "none";
+    });
 
-    const matchesSearch = alt.includes(searchValue);
-    const matchesTags = selectedTags.length === 0 ? true : selectedTags.every(tag => alt.includes(tag));
-
-    // Show only if matches search AND matches all selected tags
-    img.closest('.grid-item').style.display = (matchesSearch && matchesTags) ? '' : 'none';
-  });
-
-  if (window.msnry) window.msnry.layout();
-}
-
+    if (window.msnry) window.msnry.layout();
+  }
 
   searchInput.addEventListener("focus", () => {
-    checkboxContainer.style.display = "block";
+    checkboxContainer.style.display = "flex";
   });
 
   searchInput.addEventListener("blur", () => {
@@ -83,8 +94,14 @@ function filterImages() {
   searchInput.addEventListener("input", filterImages);
   checkboxes.forEach(cb => cb.addEventListener("change", filterImages));
 
+  // Theme toggle
   const themeSwitch = document.getElementById("theme-switch");
+  if (localStorage.getItem("theme") === "dark") {
+    document.body.classList.add("dark");
+    themeSwitch.checked = true;
+  }
   themeSwitch.addEventListener("change", () => {
     document.body.classList.toggle("dark", themeSwitch.checked);
+    localStorage.setItem("theme", themeSwitch.checked ? "dark" : "light");
   });
 });

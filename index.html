@@ -7,28 +7,33 @@
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
-  <div class="logo-container">
-    <img src="https://i.postimg.cc/1tXr2cLc/1000193832-removebg-preview.png" alt="Optipix Logo" />
-  </div>
-
-  <div id="theme-toggle">
-    <label class="switch">
+  <header>
+    <div class="logo">Optipix</div>
+    <div class="search-container">
+      <input type="text" id="search-bar" placeholder="Search by tag..." />
+      <div id="tags" class="tag-checkboxes">
+        <label><input type="checkbox" value="beach" /> Beach</label>
+        <label><input type="checkbox" value="nature" /> Nature</label>
+        <label><input type="checkbox" value="mountains" /> Mountains</label>
+        <label><input type="checkbox" value="travel" /> Travel</label>
+      </div>
+    </div>
+    <label class="theme-toggle">
       <input type="checkbox" id="theme-switch" />
       <span>🌙</span>
     </label>
-  </div>
+  </header>
 
-  <div class="controls">
-    <input id="search-bar" type="search" placeholder="Search here..." />
-    <div id="tags" style="display:none;">
-      <label><input type="checkbox" value="beach" /> Beach</label>
-      <label><input type="checkbox" value="travel" /> Travel</label>
-      <label><input type="checkbox" value="nature" /> Nature</label>
-      <label><input type="checkbox" value="mountains" /> Mountains</label>
-    </div>
-  </div>
+  <main>
+    <div id="gallery" class="grid"></div>
+  </main>
 
-  <div class="gallery" id="gallery"></div>
+  <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+  <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
+
 
   <!-- Masonry + Imagesloaded libs -->
   <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
