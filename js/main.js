@@ -19,17 +19,9 @@ document.addEventListener("DOMContentLoaded", () => {
         src="${data.lowRes}" 
         data-src="${data.highRes}" 
         alt="${data.tags.join(" ")}" 
-        data-highres="${data.highRes}" 
         class="lazy blur" />
     `;
     gallery.appendChild(div);
-  });
-
-  const msnry = new Masonry(gallery, { itemSelector: ".grid-item", gutter: 10 });
-  window.msnry = msnry;
-
-  imagesLoaded(gallery, () => {
-    msnry.layout();
   });
 
   const lazyImages = document.querySelectorAll("img.lazy");
@@ -45,7 +37,6 @@ document.addEventListener("DOMContentLoaded", () => {
           img.classList.add("loaded");
           img.classList.remove("blur");
           observer.unobserve(img);
-          msnry.layout();
         };
       }
     });
@@ -68,8 +59,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const tagMatch = selectedTags.length === 0 || selectedTags.some(tag => alt.includes(tag));
       item.style.display = searchMatch && tagMatch ? "" : "none";
     });
-
-    msnry.layout();
   }
 
   searchInput.addEventListener("focus", () => {
@@ -90,39 +79,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const themeSwitch = document.getElementById("theme-switch");
   themeSwitch.addEventListener("change", () => {
     document.body.classList.toggle("dark", themeSwitch.checked);
-  });
-
-  // Popup viewer
-  const popup = document.getElementById("popup");
-  const popupImg = document.getElementById("popup-img");
-  const spinner = document.getElementById("spinner");
-  const closePopup = document.getElementById("close-popup");
-
-  gallery.addEventListener("click", (e) => {
-    const img = e.target.closest("img[data-highres]");
-    if (!img) return;
-
-    popup.classList.remove("hidden");
-    spinner.style.display = "block";
-    popupImg.style.display = "none";
-    popupImg.src = "";
-
-    const highRes = img.dataset.highres;
-    const temp = new Image();
-    temp.src = highRes;
-    temp.onload = () => {
-      popupImg.src = highRes;
-      spinner.style.display = "none";
-      popupImg.style.display = "block";
-    };
-  });
-
-  closePopup.addEventListener("click", () => {
-    popup.classList.add("hidden");
-  });
-
-  popup.addEventListener("click", (e) => {
-    if (e.target === popup) popup.classList.add("hidden");
   });
 });
 
