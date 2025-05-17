@@ -7,30 +7,25 @@
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
-  <header>
-    <h1>Optipix Gallery</h1>
+  <div id="theme-toggle">
+    <label class="switch">
+      <input type="checkbox" id="toggle-theme" />
+      <span class="slider"></span>
+    </label>
+  </div>
 
-    <div class="controls">
-      <input
-        type="search"
-        id="searchInput"
-        placeholder="Search by tags..."
-        autocomplete="off"
-      />
-      <label>
-        <input type="checkbox" id="darkModeToggle" />
-        Dark Mode
-      </label>
-    </div>
+  <h1>Optipix Gallery</h1>
 
-    <div id="tagFilters" class="tag-filters hidden">
-      <!-- Tag checkboxes will be dynamically inserted here -->
-    </div>
-  </header>
+  <input
+    type="search"
+    id="search-bar"
+    placeholder="Search images by tags..."
+    autocomplete="off"
+  />
 
-  <main>
-    <div id="gallery" class="gallery"></div>
-  </main>
+  <div id="tags" style="display:none;"></div>
+
+  <main class="gallery" id="gallery"></main>
 
   <script src="js/main.js"></script>
 </body>
