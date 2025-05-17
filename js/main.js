@@ -26,16 +26,6 @@ document.addEventListener("DOMContentLoaded", () => {
     gallery.appendChild(div);
   });
 
-  const msnry = new Masonry(gallery, {
-    itemSelector: ".grid-item",
-    gutter: 20,
-    percentPosition: true
-  });
-
-  imagesLoaded(gallery, () => {
-    msnry.layout();
-  });
-
   const lazyImages = document.querySelectorAll("img.lazy");
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
@@ -49,7 +39,6 @@ document.addEventListener("DOMContentLoaded", () => {
           img.classList.add("loaded");
           img.classList.remove("blur");
           observer.unobserve(img);
-          msnry.layout();
         };
       }
     });
@@ -71,8 +60,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const matchesTags = selectedTags.length === 0 || selectedTags.every(tag => alt.includes(tag));
       item.style.display = matchesSearch && matchesTags ? "" : "none";
     });
-
-    msnry.layout();
   }
 
   searchInput.addEventListener("focus", () => {
@@ -86,18 +73,3 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }, 200);
   });
-
-  searchInput.addEventListener("input", filterImages);
-  checkboxes.forEach(cb => cb.addEventListener("change", filterImages));
-
-  const themeSwitch = document.getElementById("theme-switch");
-  if (localStorage.getItem("theme") === "dark") {
-    document.body.classList.add("dark");
-    themeSwitch.checked = true;
-  }
-
-  themeSwitch.addEventListener("change", () => {
-    document.body.classList.toggle("dark", themeSwitch.checked);
-    localStorage.setItem("theme", themeSwitch.checked ? "dark" : "light");
-  });
-});

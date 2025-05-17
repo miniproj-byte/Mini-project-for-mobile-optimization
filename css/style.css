@@ -64,13 +64,16 @@ body.dark .tag-checkboxes {
 }
 
 .grid {
-  max-width: 1000px;
-  margin: 2rem auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .grid-item {
   width: 100%;
-  margin-bottom: 20px;
 }
 
 .grid-item img {
@@ -78,9 +81,7 @@ body.dark .tag-checkboxes {
   height: auto;
   max-height: 600px;
   object-fit: cover;
-  display: block;
   border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
   filter: blur(6px) brightness(0.9);
   transition: filter 0.3s ease;
 }
