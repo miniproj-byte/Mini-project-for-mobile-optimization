@@ -48,18 +48,25 @@ document.addEventListener("DOMContentLoaded", () => {
   const checkboxContainer = document.getElementById("tags");
   const checkboxes = checkboxContainer.querySelectorAll('input[type="checkbox"]');
 
-  function filterImages() {
-    const query = searchInput.value.toLowerCase().trim();
-    const selectedTags = [...checkboxes].filter(cb => cb.checked).map(cb => cb.value.toLowerCase());
+function filterImages() {
+  const searchValue = searchInput.value.trim().toLowerCase();
+  const selectedTags = Array.from(checkboxes)
+    .filter(cb => cb.checked)
+    .map(cb => cb.value.toLowerCase());
 
-    document.querySelectorAll("#gallery .grid-item").forEach(item => {
-      const img = item.querySelector("img");
-      const alt = img.alt.toLowerCase();
-      const searchMatch = query === "" || alt.includes(query);
-      const tagMatch = selectedTags.length === 0 || selectedTags.some(tag => alt.includes(tag));
-      item.style.display = searchMatch && tagMatch ? "" : "none";
-    });
-  }
+  images.forEach(img => {
+    const alt = img.alt.toLowerCase();
+
+    const matchesSearch = alt.includes(searchValue);
+    const matchesTags = selectedTags.length === 0 ? true : selectedTags.every(tag => alt.includes(tag));
+
+    // Show only if matches search AND matches all selected tags
+    img.closest('.grid-item').style.display = (matchesSearch && matchesTags) ? '' : 'none';
+  });
+
+  if (window.msnry) window.msnry.layout();
+}
+
 
   searchInput.addEventListener("focus", () => {
     checkboxContainer.style.display = "block";
