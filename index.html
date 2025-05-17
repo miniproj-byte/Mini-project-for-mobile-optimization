@@ -2,32 +2,156 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Optipix Gallery</title>
-  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <header>
-    <div class="logo">Optipix</div>
-    <div class="search-container">
-      <input type="text" id="search-bar" placeholder="Search by tag..." />
-      <div id="tags" class="tag-checkboxes">
-        <label><input type="checkbox" value="beach" /> Beach</label>
-        <label><input type="checkbox" value="nature" /> Nature</label>
-        <label><input type="checkbox" value="mountains" /> Mountains</label>
-        <label><input type="checkbox" value="travel" /> Travel</label>
-      </div>
-    </div>
-    <label class="theme-toggle">
+  <div class="logo-container">
+    <img src="https://i.postimg.cc/1tXr2cLc/1000193832-removebg-preview.png" alt="Optipix Logo" />
+  </div>
+
+  <div id="theme-toggle">
+    <label class="switch">
       <input type="checkbox" id="theme-switch" />
-      <span>🌙</span>
+      <span class="slider round"></span>
     </label>
-  </header>
+  </div>
 
-  <main>
-    <div id="gallery" class="grid"></div>
-  </main>
+  <div class="controls">
+    <input id="search-bar" type="search" placeholder="Search here..." />
+    <div id="tags" style="display:none;">
+      <label><input type="checkbox" value="beach" /> Beach</label>
+      <label><input type="checkbox" value="travel" /> Travel</label>
+      <label><input type="checkbox" value="nature" /> Nature</label>
+      <label><input type="checkbox" value="mountains" /> Mountains</label>
+    </div>
+  </div>
 
-  <script src="js/main.js"></script>
+  <div class="gallery" id="gallery"></div>
+
+  <!-- Masonry + Imagesloaded libs -->
+  <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+  <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+
+  <!-- Your JS -->
+  <script>
+    // 1. Generate gallery images dynamically
+    const galleryContainer = document.getElementById('gallery');
+    const totalImages = 32;
+    const imagesHTML = [...Array(totalImages)].map((_, i) => {
+      const imgNum = (i + 1).toString().padStart(2, '0');
+      // Example tags; adjust alt accordingly to your tags for filtering
+      const altTags = ['beach', 'travel', 'nature', 'mountains'];
+      const alt = altTags[i % altTags.length] + ' image ' + imgNum;
+      return `
+        <div class="grid-item">
+          <img 
+            class="lazy" 
+            src="assets/images/low-res/img${imgNum}-low.webp" 
+            data-src="assets/images/high-res/img${imgNum}-high.webp" 
+            alt="${alt}" 
+            loading="lazy" 
+          />
+        </div>
+      `;
+    }).join('');
+    galleryContainer.innerHTML = imagesHTML;
+
+    // 2. Initialize Masonry after images loaded
+    imagesLoaded(galleryContainer, () => {
+      window.msnry = new Masonry(galleryContainer, {
+        itemSelector: '.grid-item',
+        columnWidth: '.grid-item',
+        gutter: 20,
+        percentPosition: true
+      });
+    });
+
+    // 3. Lazy loading with IntersectionObserver
+    const lazyImages = document.querySelectorAll("img.lazy");
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const img = entry.target;
+            const highResSrc = img.getAttribute("data-src");
+            if (highResSrc) {
+              const temp = new Image();
+              temp.src = highResSrc;
+              temp.onload = () => {
+                img.src = highResSrc;
+                img.classList.add("loaded");
+                img.removeAttribute("data-src");
+                observer.unobserve(img);
+                if (window.msnry) window.msnry.layout(); // re-layout Masonry
+              };
+            }
+          }
+        });
+      });
+      lazyImages.forEach(img => observer.observe(img));
+    } else {
+      // fallback
+      lazyImages.forEach(img => {
+        const highResSrc = img.getAttribute("data-src");
+        if (highResSrc) {
+          img.src = highResSrc;
+          img.classList.add("loaded");
+          img.removeAttribute("data-src");
+        }
+      });
+    }
+
+    // 4. Search and tag filter logic
+    const searchInput = document.getElementById('search-bar');
+    const checkboxContainer = document.getElementById('tags');
+    const checkboxes = checkboxContainer.querySelectorAll('input[type="checkbox"]');
+    const images = document.querySelectorAll('.grid-item img');
+
+    function filterImages() {
+      const searchValue = searchInput.value.trim().toLowerCase();
+      const selectedTags = Array.from(checkboxes)
+        .filter(cb => cb.checked)
+        .map(cb => cb.value.toLowerCase());
+
+      images.forEach(img => {
+        const alt = img.alt.toLowerCase();
+        const searchMatch = alt.includes(searchValue);
+        const tagMatch = selectedTags.length === 0 || selectedTags.some(tag => alt.includes(tag));
+        img.closest('.grid-item').style.display = (searchMatch && tagMatch) ? '' : 'none';
+      });
+
+      if (window.msnry) window.msnry.layout();
+    }
+
+    searchInput.addEventListener('input', filterImages);
+    checkboxes.forEach(cb => cb.addEventListener('change', filterImages));
+
+    // 5. Show/hide tags on search focus
+    searchInput.addEventListener('focus', () => {
+      checkboxContainer.style.display = 'flex';
+    });
+    searchInput.addEventListener('blur', () => {
+      // delay hiding so clicks on checkboxes register
+      setTimeout(() => {
+        if (document.activeElement.parentElement.parentElement !== checkboxContainer) {
+          checkboxContainer.style.display = 'none';
+        }
+      }, 200);
+    });
+
+    // 6. Theme toggle
+    const toggle = document.getElementById("theme-switch");
+    const body = document.body;
+    if (localStorage.getItem("theme") === "dark") {
+      body.classList.add("dark-mode");
+      toggle.checked = true;
+    }
+    toggle.addEventListener("change", () => {
+      body.classList.toggle("dark-mode");
+      localStorage.setItem("theme", body.classList.contains("dark-mode") ? "dark" : "light");
+    });
+  </script>
 </body>
 </html>
+
