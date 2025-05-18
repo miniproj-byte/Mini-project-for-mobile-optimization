@@ -60,7 +60,7 @@
   html += `
     <div class="grid-item">
       <img
-        ${isFirst ? '' : 'class="lazy"'}
+        class="${isFirst ? 'loaded' : 'lazy'}"
         src="assets/images/${isFirst ? 'high-res' : 'low-res'}/img${num}-${isFirst ? 'high' : 'low'}.webp"
         ${isFirst ? '' : `data-src="assets/images/high-res/img${num}-high.webp"`}
         alt="Image ${num} nature travel"
@@ -71,6 +71,7 @@
     </div>
   `;
 }
+
 
       gallery.innerHTML = html;
 
